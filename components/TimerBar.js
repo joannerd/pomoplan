@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
-import { TimerContext } from './context';
+import { TimerContext } from '../lib/context';
 import Stopwatch from './Stopwatch';
 
 const TimerBar = () => {

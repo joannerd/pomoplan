@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { TaskContext } from './context';
+import { TaskContext } from '../lib/context';
 
 const TaskForm = () => {
   const [description, setDescription] = useState('');

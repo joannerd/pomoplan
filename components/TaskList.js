@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext, useCallback } from 'react';
-import { TaskContext } from './context';
+import { TaskContext } from '../lib/context';
 import Task from './Task';
 
 const TodoList = () => {

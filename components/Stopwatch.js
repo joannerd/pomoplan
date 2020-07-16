@@ -1,6 +1,6 @@
 import { useEffect, useContext } from 'react';
-import { formatTime } from './util';
-import { TimerContext } from './context';
+import { formatTime } from '../lib/util';
+import { TimerContext } from '../lib/context';
 
 const Stopwatch = ({
   type,

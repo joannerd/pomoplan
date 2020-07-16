@@ -1,5 +1,5 @@
 import { useEffect, useState, useContext } from 'react';
-import { TimerContext } from './context';
+import { TimerContext } from '../lib/context';
 
 const ProgressCircle = () => {
   const {

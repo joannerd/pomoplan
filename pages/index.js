@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
-import { TaskContext, TimerContext } from './context';
-import { TASKS, BREAK_TIMER, SESSION_TIMER } from './util';
+import { TaskContext, TimerContext } from '../lib/context';
+import { TASKS, BREAK_TIMER, SESSION_TIMER } from '../lib/util';
 import Head from 'next/head'
-import Home from './Home';
-import TimerBar from './TimerBar';
+import Home from '../components/Home';
+import TimerBar from '../components/TimerBar';
 
 const Pomoplan = ({ timerState, taskState }) => (
   <div className="flex-column-centered container">

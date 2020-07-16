@@ -1,12 +1,12 @@
 import { useContext } from 'react';
-import { TimerContext } from './context';
+import { TimerContext } from '../lib/context';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider } from 'react-dnd';
 import TaskForm from './TaskForm';
 import TaskList from './TaskList';
 import ProgressCircle from './ProgressCircle';
 import StopwatchButton from './StopwatchButton';
-import { BREAK_END_NOTES, SESSION_END_NOTES } from './sound';
+import { BREAK_END_NOTES, SESSION_END_NOTES } from '../lib/sound';
 
 const Home = () => {
   const {

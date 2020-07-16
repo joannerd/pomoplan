@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { formatTime } from './util';
-import { createSound, stopSound } from './sound';
+import { formatTime } from '../lib/util';
+import { createSound, stopSound } from '../lib/sound';
 
 const StopwatchButton = ({ seconds, notes }) => {
   const [isBeeping, setIsBeeping] = useState(false);
