@@ -20,25 +20,17 @@ const Home = () => {
   const stopwatchButton = isBreakActive
     ? <StopwatchButton
         seconds={breakSeconds}
-        notes={BREAK_END_NOTES}
-        setIsOtherTimerActive={setIsSessionActive} />
+        notes={BREAK_END_NOTES} />
     : <StopwatchButton
         seconds={sessionSeconds}
-        notes={SESSION_END_NOTES}
-        setIsOtherTimerActive={setIsBreakActive} />;
+        notes={SESSION_END_NOTES} />;
   
   return (
     <main>
       <article id="pomo">
         <h1>Pomo</h1>
-        
-        <div className="clock">
-          <svg className="clock-svg" viewBox="0 0 100 100">
-            <g className="clock-circle">
-              <circle className="clock-path" cx="50" cy="50" r="45" />
-              <path strokeDasharray="283" className="clock-path-remaining" />
-            </g>
-          </svg>
+
+        <div className="progress-circle">
           <ProgressCircle />
           {stopwatchButton}
         </div>

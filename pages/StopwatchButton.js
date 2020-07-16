@@ -2,13 +2,12 @@ import { useEffect, useState } from 'react';
 import { formatTime } from './util';
 import { createSound, stopSound } from './sound';
 
-const StopwatchButton = ({ seconds, notes, setIsOtherTimerActive }) => {
+const StopwatchButton = ({ seconds, notes }) => {
   const [isBeeping, setIsBeeping] = useState(false);
 
   const handleStopSoundClick = () => {
     stopSound();
     setIsBeeping(false);
-    setIsOtherTimerActive(true);
   };
 
   useEffect(() => {
@@ -21,7 +20,7 @@ const StopwatchButton = ({ seconds, notes, setIsOtherTimerActive }) => {
   const stopSoundButton = <button onClick={handleStopSoundClick}>Stop</button>;
 
   return (
-    <span className="clock-label">
+    <span className="progress-circle-label">
       {isBeeping ? stopSoundButton : formatTime(seconds)}
     </span>
   );

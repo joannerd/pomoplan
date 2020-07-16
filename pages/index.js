@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { TodoContext, TimerContext } from './context';
+import { TaskContext, TimerContext } from './context';
 import { TASKS, BREAK_TIMER, SESSION_TIMER } from './util';
 import Head from 'next/head'
 import Home from './Home';
@@ -20,9 +20,9 @@ const Pomoplan = ({ timerState, taskState }) => (
         <TimerBar />
       </header>
 
-      <TodoContext.Provider value={taskState}>
+      <TaskContext.Provider value={taskState}>
         <Home />
-      </TodoContext.Provider>
+      </TaskContext.Provider>
     </TimerContext.Provider>
 
     <footer className="flex-row-centered">
@@ -42,8 +42,8 @@ const Root = () => {
   const [numTasks, setNumTasks] = useState(0);
   const [breakLength, setBreakLength] = useState(5);
   const [sessionLength, setSessionLength] = useState(25);
-  const [breakSeconds, setBreakSeconds] = useState(3);
-  const [sessionSeconds, setSessionSeconds] = useState(1);
+  const [breakSeconds, setBreakSeconds] = useState(2);
+  const [sessionSeconds, setSessionSeconds] = useState(sessionLength * 60);
   const [isBreakActive, setIsBreakActive] = useState(false);
   const [isSessionActive, setIsSessionActive] = useState(false);
 

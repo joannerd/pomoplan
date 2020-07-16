@@ -40,7 +40,7 @@ const Stopwatch = ({
     return () => clearInterval(timer);
   }, [isActive, seconds]);
 
-  const buttonName = isActive ? 'pause' : 'start';
+  const buttonName = isActive ? 'Pause' : 'Start';
 
   return (
     <>
@@ -49,7 +49,7 @@ const Stopwatch = ({
         <h3>{formatTime(seconds)}</h3>
       </div>
       <button onClick={toggleTimer} className={buttonName}>
-        {buttonName.toUpperCase()}
+        {buttonName}
       </button>
     </>
   );

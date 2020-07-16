@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useContext, useCallback } from 'react';
-import { TodoContext } from './context';
+import { TaskContext } from './context';
 import Task from './Task';
 
 const TodoList = () => {
-  const { tasks, updateTask } = useContext(TodoContext);
+  const { tasks, updateTask } = useContext(TaskContext);
   const [cards, setCards] = useState([]);
 
   useEffect(() => {
