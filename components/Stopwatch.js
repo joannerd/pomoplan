@@ -48,7 +48,7 @@ const Stopwatch = ({
         <h2>{type}</h2>
         <h3>{formatTime(seconds)}</h3>
       </div>
-      <button onClick={toggleTimer} className={buttonName}>
+      <button onClick={toggleTimer} className={buttonName.toLowerCase()}>
         {buttonName}
       </button>
     </>

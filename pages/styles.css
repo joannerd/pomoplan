@@ -157,7 +157,7 @@ article {
 }
 
 #clock input {
-  width: 50px;
+  width: 45px;
 }
 
 .pause {
@@ -170,6 +170,10 @@ article {
 
 .reset {
   background-color: rgb(170, 170, 170);
+}
+
+.session-length {
+  position: relative;
 }
 
 @media all and (max-width: 800px) {
@@ -210,4 +214,12 @@ article {
 
 .progress-circle-svg {
   transform: rotate(270deg);
+}
+
+#errors {
+  color: red;
+  position: absolute;
+  background: rgb(255, 255, 255);
+  border: 1px solid red;
+  border-radius: 3px;
 }

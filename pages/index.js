@@ -66,10 +66,10 @@ const Root = () => {
   }, [tasks])
 
   const createTask = (description) => {
-    const newTaskId = new Date().getTime();
+    const id = new Date().getTime();
     const updatedTasks = { ...tasks };
     updatedTasks[newTaskId] = {
-      id: newTaskId,
+      id,
       description,
       isDone: false,
       isArchived: false,

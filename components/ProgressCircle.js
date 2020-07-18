@@ -15,8 +15,8 @@ const ProgressCircle = () => {
   useEffect(() => {
     const maxSeconds = isBreakActive ? breakLength * 60 : sessionLength * 60;
     const seconds = isBreakActive ? breakSeconds : sessionSeconds;
-    const svgValue = ((seconds * 100) / maxSeconds) * 3.14;
-
+    let svgValue = ((seconds * 100) / maxSeconds) * 3.14;
+    if (svgValue === NaN) svgValue = 0;
     setStrokeDashoffset(svgValue);
   }, [isBreakActive, sessionSeconds, breakSeconds]);
 

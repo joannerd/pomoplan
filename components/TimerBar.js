@@ -1,6 +1,7 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, useRef } from 'react';
 import { TimerContext } from '../lib/context';
 import Stopwatch from './Stopwatch';
+import ValidationErrors from './ValidationErrors';
 
 const TimerBar = () => {
   const {
@@ -18,8 +19,47 @@ const TimerBar = () => {
     isSessionActive,
     setIsSessionActive,
   } = useContext(TimerContext);
+  const ref = useRef();
   const [sessionNumber, setSessionNumber] = useState(1);
-  const updateSession = (e) => setSessionLength(e.target.value);
+  const [sessionInput, setSessionInput] = useState(sessionLength.toString());
+  const [errors, setErrors] = useState({});
+
+  const clearSessionInput = () => setSessionInput('');
+
+  const updateSession = (e) => {
+    const inputLength = e.target.value;
+    setErrors([]);
+
+    if (inputLength.length < 3) {
+      setSessionInput(inputLength);
+      let length = parseInt(inputLength, 10);
+      const id = new Date().getTime();
+      const isValid = length <= 30 && length >= 20;
+      if (length > 30) {
+        length = 30;
+        const maxLengthError = {
+          [id] : {
+            id,
+            message: 'Maximum session length is 30 minutes.',
+          },
+        };
+
+        setErrors((errors) => ({ ...errors, ...maxLengthError }));
+      } else if (length < 20) {
+        length = 20;
+        const minLengthError = {
+          [id]: {
+            id,
+            message: 'Minimum session length is 20 minutes.',
+          },
+        };
+
+        setErrors((errors) => ({ ...errors, ...minLengthError }));
+      } else if (isValid) {
+        setSessionLength(length);
+      }
+    }
+  };
 
   const reset = () => {
     removeStoredTimers();
@@ -36,18 +76,33 @@ const TimerBar = () => {
     };
   }, [sessionNumber])
 
+  useEffect(() => {
+    if (errors.length) setErrors([]);
+  }, []);
+
+  const clearError = (id) => {
+    const updatedErrors = { ...errors };
+    delete updatedErrors[id];
+    setErrors(updatedErrors);
+    clearSessionInput();
+    ref.current.focus();
+  };
+
   return (
     <div id="clock">
-      <div>
+      <div className="session-length">
         <h2>Session</h2>
         <input
+          ref={ref}
           type="number"
-          value={sessionLength}
+          value={sessionInput}
+          onClick={clearSessionInput}
           onChange={updateSession}
           min="20"
           max="30"
           required
         />
+        <ValidationErrors errors={Object.values(errors)} clearError={clearError} />
       </div>
 
       <Stopwatch
@@ -72,7 +127,9 @@ const TimerBar = () => {
         setSessionNumber={setSessionNumber}
       />
 
-      <button onClick={reset} className="reset">Reset</button>
+      <button onClick={reset} className="reset">
+        Reset
+      </button>
     </div>
   );
 };
