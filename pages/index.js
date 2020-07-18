@@ -68,7 +68,7 @@ const Root = () => {
   const createTask = (description) => {
     const id = new Date().getTime();
     const updatedTasks = { ...tasks };
-    updatedTasks[newTaskId] = {
+    updatedTasks[id] = {
       id,
       description,
       isDone: false,
