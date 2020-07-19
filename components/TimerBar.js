@@ -114,6 +114,7 @@ const TimerBar = () => {
         length={breakLength}
         setIsOtherTimerActive={setIsSessionActive}
         setSessionNumber={setSessionNumber}
+        sessionNumber={sessionNumber}
       />
 
       <Stopwatch
@@ -125,6 +126,7 @@ const TimerBar = () => {
         length={sessionLength}
         setIsOtherTimerActive={setIsBreakActive}
         setSessionNumber={setSessionNumber}
+        sessionNumber={sessionNumber}
       />
 
       <button onClick={reset} className="reset">

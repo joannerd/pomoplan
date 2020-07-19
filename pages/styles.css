@@ -123,6 +123,9 @@ article {
   border-radius: 3px;
   background-color: white;
   cursor: move;
+  cursor: -webkit-grab;
+  cursor: -moz-grab;
+  cursor: grab;
   margin: 10px;
   padding: 10px 20px 10px 20px;
   align-items: center;
@@ -142,6 +145,12 @@ article {
 
 .task span {
   cursor: pointer;
+}
+
+.task:active, .task:focus {
+  cursor: -webkit-grabbing;
+  cursor: -moz-grabbing;
+  cursor: grabbing;
 }
 
 #clock {
@@ -222,4 +231,11 @@ article {
   background: rgb(255, 255, 255);
   border: 1px solid red;
   border-radius: 3px;
+}
+
+*:disabled, *:disabled:hover {
+  cursor: not-allowed;
+  background-color: rgb(170, 170, 170);
+  opacity: 0.5;
+  border: none;
 }
