@@ -4,7 +4,6 @@ import { TaskContext } from '../lib/context';
 const TaskForm = () => {
   const [description, setDescription] = useState('');
   const { createTask } = useContext(TaskContext);
-
   const handleInputChange = (e) => setDescription(e.target.value);
 
   const handleSubmit = (e) => {

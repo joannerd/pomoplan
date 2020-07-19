@@ -7,18 +7,14 @@ import ProgressCircle from './ProgressCircle';
 import StopwatchButton from './StopwatchButton';
 
 const Home = () => {
-  const {
-    breakSeconds,
-    sessionSeconds,
-    isBreakActive,
-  } = useContext(TimerContext);
-  
-  const stopwatchButton = isBreakActive
+  const { breakTimer, sessionTimer } = useContext(TimerContext);
+
+  const stopwatchButton = breakTimer.isActive
     ? <StopwatchButton
-        seconds={breakSeconds}
+        seconds={breakTimer.seconds}
         notes={BREAK_END_NOTES} />
     : <StopwatchButton
-        seconds={sessionSeconds}
+        seconds={sessionTimer.seconds}
         notes={SESSION_END_NOTES} />;
   
   return (

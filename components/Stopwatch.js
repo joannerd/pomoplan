@@ -4,16 +4,13 @@ import { TimerContext } from '../lib/context';
 
 const Stopwatch = ({
   type,
-  isActive,
-  setIsActive,
-  seconds,
-  setSeconds,
-  length,
+  stopwatchTimer,
   setIsOtherTimerActive,
   setSessionNumber,
   sessionNumber,
 }) => {
   const { updateStoredTimers } = useContext(TimerContext);
+  const { isActive, setIsActive, seconds, setSeconds, length } = stopwatchTimer;
 
   let timer = null;
   const toggleTimer = () => setIsActive(!isActive);

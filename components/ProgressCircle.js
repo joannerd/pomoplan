@@ -2,23 +2,16 @@ import { useEffect, useState, useContext } from 'react';
 import { TimerContext } from '../lib/context';
 
 const ProgressCircle = () => {
-  const {
-    breakSeconds,
-    sessionSeconds,
-    isBreakActive,
-    breakLength,
-    sessionLength
-  } = useContext(TimerContext);
-
+  const { breakTimer, sessionTimer } = useContext(TimerContext);
   const [strokeDashoffset, setStrokeDashoffset] = useState(100);
 
   useEffect(() => {
-    const maxSeconds = isBreakActive ? breakLength * 60 : sessionLength * 60;
-    const seconds = isBreakActive ? breakSeconds : sessionSeconds;
+    const maxSeconds = breakTimer.isActive ? breakTimer.length * 60 : sessionTimer.length * 60;
+    const seconds = breakTimer.isActive ? breakTimer.seconds : sessionTimer.seconds;
     let svgValue = ((seconds * 100) / maxSeconds) * 3.14;
     if (svgValue === NaN) svgValue = 0;
     setStrokeDashoffset(svgValue);
-  }, [isBreakActive, sessionSeconds, breakSeconds]);
+  }, [breakTimer.isActive, sessionTimer.seconds, breakTimer.seconds]);
 
   return (
     <svg className="progress-circle-svg" viewBox="0 0 100 100" data-value="100">

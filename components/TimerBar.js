@@ -5,19 +5,9 @@ import ValidationErrors from './ValidationErrors';
 
 const TimerBar = () => {
   const {
-    breakLength,
-    setBreakLength,
-    sessionLength,
-    setSessionLength,
-    breakSeconds,
-    setBreakSeconds,
-    sessionSeconds,
-    setSessionSeconds,
+    breakTimer,
+    sessionTimer,
     removeStoredTimers,
-    isBreakActive,
-    setIsBreakActive,
-    isSessionActive,
-    setIsSessionActive,
   } = useContext(TimerContext);
   const {
     types,
@@ -25,34 +15,23 @@ const TimerBar = () => {
     setNewInputError,
     clearErrors,
   } = useContext(ErrorContext);
+
   const { SESSION, BREAK, MIN, MAX } = types;
   const [sessionNumber, setSessionNumber] = useState(1);
-  const [sessionInput, setSessionInput] = useState(sessionLength.toString());
+  const [sessionInput, setSessionInput] = useState(sessionTimer.length.toString());
   const [breakInput, setBreakInput] = useState('15');
-  const clearSessionInput = () => setSessionInput('');
-  const clearBreakInput = () => setBreakInput('');
+  const updateBreak = (e) => updateInput(BREAK, e);
+  const updateSession = (e) => updateInput(SESSION, e);
 
-  const updateSession = (e) => {
+  const updateInput = (type, e) => {
     const input = e.target.value;
     clearErrors();
 
     if (input.length < 3) {
-      setSessionInput(input);
-      validateLength(SESSION, input);
+      (type === SESSION) ? setSessionInput(input) : setBreakInput(input);
+      validateLength(type, input);
     } else {
-      setNewInputError(SESSION);
-    }
-  };
-
-  const updateBreak = (e) => {
-    const input = e.target.value;
-    clearErrors();
-
-    if (input.length < 3) {
-      setBreakInput(input);
-      validateLength(BREAK, input);
-    } else {
-      setNewInputError(BREAK);
+      setNewInputError(type);
     }
   };
 
@@ -64,7 +43,7 @@ const TimerBar = () => {
     const isValid = length <= 30 && length >= minLength;
     if (isValid) {
       if (type === SESSION) {
-        setSessionLength(length)
+        sessionTimer.setLength(length)
       }
     }
 
@@ -77,15 +56,15 @@ const TimerBar = () => {
 
   const reset = () => {
     removeStoredTimers();
-    setIsBreakActive(false);
-    setIsSessionActive(false);
-    setBreakSeconds(breakLength * 60);
-    setSessionSeconds(sessionLength * 60);
+    breakTimer.setIsActive(false);
+    sessionTimer.setIsActive(false);
+    breakTimer.setSeconds(breakTimer.length * 60);
+    sessionTimer.setSeconds(sessionTimer.length * 60);
   };
-
+  
   useEffect(() => {
     if (sessionNumber === 4) {
-      setBreakLength(parseInt(breakInput, 10));
+      breakTimer.setLength(parseInt(breakInput, 10));
       setSessionNumber(1);
     };
   }, [sessionNumber])
@@ -99,7 +78,6 @@ const TimerBar = () => {
         <input
           type="number"
           value={sessionInput}
-          onClick={clearSessionInput}
           onChange={updateSession}
           min="20"
           max="30"
@@ -112,7 +90,6 @@ const TimerBar = () => {
         <input
           type="number"
           value={breakInput}
-          onClick={clearBreakInput}
           onChange={updateBreak}
           min="15"
           max="30"
@@ -122,24 +99,16 @@ const TimerBar = () => {
 
       <Stopwatch
         type="Break"
-        isActive={isBreakActive}
-        setIsActive={setIsBreakActive}
-        seconds={breakSeconds}
-        setSeconds={setBreakSeconds}
-        length={breakLength}
-        setIsOtherTimerActive={setIsSessionActive}
+        stopwatchTimer={breakTimer}
+        setIsOtherTimerActive={sessionTimer.setIsActive}
         setSessionNumber={setSessionNumber}
         sessionNumber={sessionNumber}
       />
 
       <Stopwatch
         type="Session"
-        isActive={isSessionActive}
-        setIsActive={setIsSessionActive}
-        seconds={sessionSeconds}
-        setSeconds={setSessionSeconds}
-        length={sessionLength}
-        setIsOtherTimerActive={setIsBreakActive}
+        stopwatchTimer={sessionTimer}
+        setIsOtherTimerActive={breakTimer.setIsActive}
         setSessionNumber={setSessionNumber}
         sessionNumber={sessionNumber}
       />

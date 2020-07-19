@@ -48,7 +48,7 @@ const Root = () => {
   const [numTasks, setNumTasks] = useState(0);
   const [breakLength, setBreakLength] = useState(5);
   const [sessionLength, setSessionLength] = useState(25);
-  const [breakSeconds, setBreakSeconds] = useState(2);
+  const [breakSeconds, setBreakSeconds] = useState(breakLength * 60);
   const [sessionSeconds, setSessionSeconds] = useState(sessionLength * 60);
   const [isBreakActive, setIsBreakActive] = useState(false);
   const [isSessionActive, setIsSessionActive] = useState(false);
@@ -127,7 +127,6 @@ const Root = () => {
   const clearErrors = () => setErrors([]);
   const clearError = (id) => {
     const updatedErrors = { ...errors };
-    const type = updatedErrors[id].type;
     delete updatedErrors[id];
     setErrors(updatedErrors);
   };
@@ -140,20 +139,24 @@ const Root = () => {
   };
 
   const timerState = {
-    breakLength,
-    setBreakLength,
-    sessionLength,
-    setSessionLength,
-    breakSeconds,
-    setBreakSeconds,
-    sessionSeconds,
-    setSessionSeconds,
+    breakTimer: {
+      length: breakLength,
+      setLength: setBreakLength,
+      seconds: breakSeconds,
+      setSeconds: setBreakSeconds,
+      isActive: isBreakActive,
+      setIsActive: setIsBreakActive,
+    },
+    sessionTimer: {
+      length: sessionLength,
+      setLength: setSessionLength,
+      seconds: sessionSeconds,
+      setSeconds: setSessionSeconds,
+      isActive: isSessionActive,
+      setIsActive: setIsSessionActive,
+    },
     updateStoredTimers,
     removeStoredTimers,
-    isBreakActive,
-    setIsBreakActive,
-    isSessionActive,
-    setIsSessionActive,
   };
 
   const errorState = {
