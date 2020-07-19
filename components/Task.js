@@ -39,7 +39,7 @@ const Task = ({ task }) => {
   };
 
   return (
-    <Draggable draggableId={task.id.toString()} index={task.order}>
+    <Draggable draggableId={task.id.toString()} index={task.id}>
       {(provided) => (
           <li
             className="task flex-row-centered"

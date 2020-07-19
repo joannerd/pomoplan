@@ -6,6 +6,7 @@ import { types, lengthError, inputError } from '../lib/errors';
 import Head from 'next/head'
 import Home from '../components/Home';
 import TimerBar from '../components/TimerBar';
+import TaskOrderList from '../lib/TaskOrderList';
 
 const Pomoplan = ({ timerState, taskState, errorState }) => (
   <div className="flex-column-centered container">
@@ -44,7 +45,7 @@ const Pomoplan = ({ timerState, taskState, errorState }) => (
 
 const Root = () => {
   const [tasks, setTasks] = useState({});
-  const [order, setOrder] = useState([]);
+  const [taskOrder, setTaskOrder] = useState(null);
   const [numTasks, setNumTasks] = useState(0);
   const [breakLength, setBreakLength] = useState(5);
   const [sessionLength, setSessionLength] = useState(25);
@@ -60,7 +61,13 @@ const Root = () => {
     const storedSessionSeconds = JSON.parse(localStorage.getItem(SESSION_TIMER));
     if (storedTasks) {
       setTasks(storedTasks);
-      setOrder(Object.keys(storedTasks));
+
+      const orderedTaskIds = {};
+      Object.values(storedTasks)
+        .sort((a, b) => a.order - b.order)
+        .forEach(({ id, order }) => orderedTaskIds[order] = id);
+      const taskOrderList = new TaskOrderList(Object.values(orderedTaskIds));
+      setTaskOrder(taskOrderList);
     }
     if (storedBreakSeconds) setBreakSeconds(storedBreakSeconds);
     if (storedSessionSeconds) setSessionSeconds(storedSessionSeconds);
@@ -136,7 +143,7 @@ const Root = () => {
 
   const taskState = {
     tasks,
-    order,
+    taskOrder,
     createTask,
     deleteTask,
     updateTask,
@@ -175,33 +182,96 @@ const Root = () => {
   const onDragEnd = (result) => {
     const { destination, source } = result;
     if (!destination || destination.index === source.index) return;
-    const startIdx = source.index;
-    const endIdx = destination.index;
 
-    if (startIdx < endIdx) {
-      let currentStartIdx = startIdx;
-      let currentEndIdx = startIdx + 1;
-      while (currentStartIdx < endIdx) {
-        const taskToMove = Object.values(tasks).filter(task => task.order === currentStartIdx)[0];
-        const taskToShift = Object.values(tasks).filter(task => task.order === currentEndIdx)[0];
-        updateTask(taskToMove.id, 'order', currentEndIdx);
-        updateTask(taskToShift.id, 'order', currentStartIdx);
-        currentStartIdx += 1;
-        currentEndIdx += 1;
-      }
-    } else {
-      let currentStartIdx = endIdx;
-      let currentEndIdx = endIdx + 1;
-      while (endIdx < currentEndIdx) {
-        const taskToMove = Object.values(tasks).filter((task) => task.order === currentStartIdx)[0];
-        const taskToShift = Object.values(tasks).filter((task) => task.order === currentEndIdx)[0];
-        updateTask(taskToMove.id, 'order', currentEndIdx);
-        updateTask(taskToShift.id, 'order', currentStartIdx);
-        currentStartIdx -= 1;
-        currentEndIdx -= 1;
-      }
-    }
+    const startId = source.index;
+    const endId = destination.index;
+    const newOrder = taskOrder.updateTaskOrder(startId, endId);
+    console.log(newOrder.toObject())
+
+    setTaskOrder(newOrder);
   };
+
+  // const onDragEnd = (result) => {
+  //   const { destination, source } = result;
+  //   if (!destination || destination.index === source.index) return;
+  //   const startIdx = source.index;
+  //   const endIdx = destination.index;
+
+  //   if (startIdx < endIdx) {
+  //     let currentStartIdx = startIdx;
+  //     let currentEndIdx = startIdx + 1;
+  //     while (currentStartIdx < endIdx) {
+  //       const taskToMove = Object.values(tasks).filter(task => task.order === currentStartIdx)[0];
+  //       const taskToShift = Object.values(tasks).filter(task => task.order === currentEndIdx)[0];
+  //       updateTask(taskToMove.id, 'order', currentEndIdx);
+  //       updateTask(taskToShift.id, 'order', currentStartIdx);
+  //       currentStartIdx += 1;
+  //       currentEndIdx += 1;
+  //     }
+  //   } else {
+  //     let currentStartIdx = endIdx;
+  //     let currentEndIdx = endIdx + 1;
+  //     while (endIdx < currentEndIdx) {
+  //       const taskToMove = Object.values(tasks).filter((task) => task.order === currentStartIdx)[0];
+  //       const taskToShift = Object.values(tasks).filter((task) => task.order === currentEndIdx)[0];
+  //       updateTask(taskToMove.id, 'order', currentEndIdx);
+  //       updateTask(taskToShift.id, 'order', currentStartIdx);
+  //       currentStartIdx -= 1;
+  //       currentEndIdx -= 1;
+  //     }
+  //   }
+  // };
+
+  // const onDragEnd = (result) => {
+  //   const { destination, source, draggableId } = result;
+  //   if (!destination || destination.index === source.index) return;
+  //   const startIdx = source.index;
+  //   const endIdx = destination.index;
+
+  //   const orderedTaskIds = [...taskOrder];
+  //   console.log(orderedTaskIds);
+
+
+  //   orderedTaskIds.splice(startIdx, 1);
+  //   orderedTaskIds.splice(endIdx, 0, parseInt(draggableId, 10));
+  //   // const updatedOrder = [...orderedTaskIds, ...newOrder]
+
+  //   console.log(orderedTaskIds)
+  //   // const taskToMove = { ...tasks[startId] };
+  //   // const taskToShift = { ...tasks[endId] };
+
+
+
+
+  //   // if (taskToMove.order < taskToShift.order) {
+
+  //   //   taskToMove.order = taskToMove.order + 1;
+  //   // } else {
+  //   //   taskToMove.order = taskToMove.order - 1;
+  //   // }
+
+  //   // while (currentStartIdx < endIdx) {
+  //   //   updateTask(taskToMove.id, 'order', currentEndIdx);
+  //   //   updateTask(taskToShift.id, 'order', currentStartIdx);
+  //   //   currentStartIdx += 1;
+  //   //   currentEndIdx += 1;
+  //   // }
+  // };
+
+  // const addOrder = (startOrder, endOrder) => {
+  //   const taskOrder = order
+  //     .filter((ord) => ord.order > startOrder && ord.order < endOrder)
+  //     .map(({ id, order }) => ({ [order + 1]: id }));
+  //   return taskOrder;
+  // };
+
+  // const removeOrder = (startOrder, endOrder) => {
+  //   const taskOrder = order
+  //     .filter((ord) => ord.order < startOrder && ord.order > endOrder)
+  //     .map(({ id, order }) => ({ [order - 1]: id }));
+  //   return taskOrder;
+  // };
+
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
