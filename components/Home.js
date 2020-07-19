@@ -19,7 +19,7 @@ const Home = () => {
   
   return (
     <main>
-      <article id="pomo">
+      <article className="flex-column-centered">
         <h1>Pomo</h1>
 
         <div className="progress-circle">
