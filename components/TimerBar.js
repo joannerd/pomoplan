@@ -71,51 +71,57 @@ const TimerBar = () => {
 
   return (
     <div id="clock">
-      <ValidationErrors />
+      <span className="flex-row-centered">
+        <div className="flex-row-centered mobile-timer-bar">
+          <ValidationErrors />
 
-      <div>
-        <h2>Session</h2>
-        <input
-          type="number"
-          value={sessionInput}
-          onChange={updateSession}
-          min="20"
-          max="30"
-          required
-        />
-      </div>
+          <div>
+            <h2>Session</h2>
+            <input
+              type="number"
+              value={sessionInput}
+              onChange={updateSession}
+              min="20"
+              max="30"
+              required
+            />
+          </div>
 
-      <div>
-        <h2>4th Break</h2>
-        <input
-          type="number"
-          value={breakInput}
-          onChange={updateBreak}
-          min="15"
-          max="30"
-          required
-        />
-      </div>
+          <div>
+            <h2>4th Break</h2>
+            <input
+              type="number"
+              value={breakInput}
+              onChange={updateBreak}
+              min="15"
+              max="30"
+              required
+            />
+          </div>
+        </div>
 
-      <Stopwatch
-        type="Break"
-        stopwatchTimer={breakTimer}
-        setIsOtherTimerActive={sessionTimer.setIsActive}
-        setSessionNumber={setSessionNumber}
-        sessionNumber={sessionNumber}
-      />
+        <div className="flex-row-centered mobile-timer-bar">
+          <Stopwatch
+            type="Break"
+            stopwatchTimer={breakTimer}
+            setIsOtherTimerActive={sessionTimer.setIsActive}
+            setSessionNumber={setSessionNumber}
+            sessionNumber={sessionNumber}
+          />
 
-      <Stopwatch
-        type="Session"
-        stopwatchTimer={sessionTimer}
-        setIsOtherTimerActive={breakTimer.setIsActive}
-        setSessionNumber={setSessionNumber}
-        sessionNumber={sessionNumber}
-      />
+          <Stopwatch
+            type="Session"
+            stopwatchTimer={sessionTimer}
+            setIsOtherTimerActive={breakTimer.setIsActive}
+            setSessionNumber={setSessionNumber}
+            sessionNumber={sessionNumber}
+          />
 
-      <button onClick={reset} className="reset">
-        Reset
-      </button>
+          <button onClick={reset} className="reset">
+            Reset
+          </button>
+        </div>
+      </span>
     </div>
   );
 };
