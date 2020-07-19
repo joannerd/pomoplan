@@ -1,9 +1,9 @@
 import React, { useRef, useState, useContext } from 'react';
-import { useDrag, useDrop } from 'react-dnd';
 import { TaskContext } from '../lib/context';
-import { IS_ARCHIVED, IS_DONE, TASK, CHECKBOX } from '../lib/util';
+import { IS_ARCHIVED, IS_DONE, CHECKBOX } from '../lib/util';
+import { Draggable } from 'react-beautiful-dnd';
 
-const Task = ({ index, task, moveCard }) => {
+const Task = ({ task }) => {
   const ref = useRef(null);
   const { id, description, isDone, isArchived } = task;
   const { deleteTask, updateTask } = useContext(TaskContext);
@@ -38,52 +38,28 @@ const Task = ({ index, task, moveCard }) => {
     updateTask(id, 'description', taskDescription);
   };
 
-  const [_, drop] = useDrop({
-    accept: TASK,
-    hover(item, monitor) {
-      if (!ref.current) return;
-
-      const dragIndex = item.index;
-      const hoverIndex = index;
-      if (dragIndex === hoverIndex) return;
-
-      const hoverBoundingRect = ref.current?.getBoundingClientRect();
-      const hoverMiddleY =
-        (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
-      const clientOffset = monitor.getClientOffset();
-      const hoverClientY = clientOffset.y - hoverBoundingRect.top;
-      if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) return;
-
-      if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) return;
-
-      moveCard(dragIndex, hoverIndex, id);
-      item.index = hoverIndex;
-    },
-  });
-
-  const [{ isDragging }, drag] = useDrag({
-    item: { type: TASK, id, index },
-    collect: (monitor) => ({
-      isDragging: monitor.isDragging(),
-    }),
-  });
-
-  const opacity = isDone || isDragging || isArchived ? 0.3 : 1;
-  drag(drop(ref));
-
   return (
-    <li ref={ref} className="task flex-row-centered" style={{ opacity }}>
-      <span onClick={handleCheckboxClick}>{checkbox}</span>
-      <form onSubmit={handleUpdateSubmit}>
-        <input
-          type="text"
-          value={taskDescription}
-          onChange={updateValue}
-          required
-        />
-      </form>
-      <span onClick={handleClick}>X</span>
-    </li>
+    <Draggable draggableId={task.id.toString()} index={task.order}>
+      {(provided) => (
+          <li
+            className="task flex-row-centered"
+            ref={provided.innerRef}
+            {...provided.draggableProps}
+            {...provided.dragHandleProps}
+          >
+            <span onClick={handleCheckboxClick}>{checkbox}</span>
+            <form onSubmit={handleUpdateSubmit}>
+              <input
+                type="text"
+                value={taskDescription}
+                onChange={updateValue}
+                required
+              />
+            </form>
+            <span onClick={handleClick}>X</span>
+          </li>
+      )}
+    </Draggable>
   );
 };
 

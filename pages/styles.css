@@ -153,6 +153,7 @@ article {
   cursor: -webkit-grabbing;
   cursor: -moz-grabbing;
   cursor: grabbing;
+  opacity: 0.3;
 }
 
 #clock {

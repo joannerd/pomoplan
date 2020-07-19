@@ -1,4 +1,5 @@
 import { useContext } from 'react';
+import { Droppable } from 'react-beautiful-dnd';
 import { TimerContext } from '../lib/context';
 import { BREAK_END_NOTES, SESSION_END_NOTES } from '../lib/sound';
 import TaskForm from './TaskForm';
@@ -30,7 +31,13 @@ const Home = () => {
       <article>
         <p>Welcome to Pomoplan.</p>
         <TaskForm />
-        <TaskList />
+        <Droppable droppableId="all-tasks">
+          {(provided) => (
+            <TaskList {...provided.droppableProps} innerRef={provided.innerRef}>
+              {provided.placeholder}
+            </TaskList>
+          )}
+        </Droppable>
       </article>
     </main>
   );

@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-import { HTML5Backend } from 'react-dnd-html5-backend';
-import { DndProvider } from 'react-dnd';
+import { DragDropContext } from 'react-beautiful-dnd';
 import { TaskContext, TimerContext, ErrorContext } from '../lib/context';
 import { TASKS, BREAK_TIMER, SESSION_TIMER } from '../lib/util';
 import { types, lengthError, inputError } from '../lib/errors';
@@ -45,6 +44,7 @@ const Pomoplan = ({ timerState, taskState, errorState }) => (
 
 const Root = () => {
   const [tasks, setTasks] = useState({});
+  const [order, setOrder] = useState([]);
   const [numTasks, setNumTasks] = useState(0);
   const [breakLength, setBreakLength] = useState(5);
   const [sessionLength, setSessionLength] = useState(25);
@@ -58,7 +58,10 @@ const Root = () => {
     const storedTasks = JSON.parse(localStorage.getItem(TASKS));
     const storedBreakSeconds = JSON.parse(localStorage.getItem(BREAK_TIMER));
     const storedSessionSeconds = JSON.parse(localStorage.getItem(SESSION_TIMER));
-    if (storedTasks) setTasks(storedTasks);
+    if (storedTasks) {
+      setTasks(storedTasks);
+      setOrder(Object.keys(storedTasks));
+    }
     if (storedBreakSeconds) setBreakSeconds(storedBreakSeconds);
     if (storedSessionSeconds) setSessionSeconds(storedSessionSeconds);
 
@@ -133,6 +136,7 @@ const Root = () => {
 
   const taskState = {
     tasks,
+    order,
     createTask,
     deleteTask,
     updateTask,
@@ -168,14 +172,45 @@ const Root = () => {
     clearError,
   };
 
+  const onDragEnd = (result) => {
+    const { destination, source } = result;
+    if (!destination || destination.index === source.index) return;
+    const startIdx = source.index;
+    const endIdx = destination.index;
+
+    if (startIdx < endIdx) {
+      let currentStartIdx = startIdx;
+      let currentEndIdx = startIdx + 1;
+      while (currentStartIdx < endIdx) {
+        const taskToMove = Object.values(tasks).filter(task => task.order === currentStartIdx)[0];
+        const taskToShift = Object.values(tasks).filter(task => task.order === currentEndIdx)[0];
+        updateTask(taskToMove.id, 'order', currentEndIdx);
+        updateTask(taskToShift.id, 'order', currentStartIdx);
+        currentStartIdx += 1;
+        currentEndIdx += 1;
+      }
+    } else {
+      let currentStartIdx = endIdx;
+      let currentEndIdx = endIdx + 1;
+      while (endIdx < currentEndIdx) {
+        const taskToMove = Object.values(tasks).filter((task) => task.order === currentStartIdx)[0];
+        const taskToShift = Object.values(tasks).filter((task) => task.order === currentEndIdx)[0];
+        updateTask(taskToMove.id, 'order', currentEndIdx);
+        updateTask(taskToShift.id, 'order', currentStartIdx);
+        currentStartIdx -= 1;
+        currentEndIdx -= 1;
+      }
+    }
+  };
+
   return (
-    <DndProvider backend={HTML5Backend}>
+    <DragDropContext onDragEnd={onDragEnd}>
       <Pomoplan
         timerState={timerState}
         taskState={taskState}
         errorState={errorState}
       />
-    </DndProvider>
+    </DragDropContext>
   );
 };
 
