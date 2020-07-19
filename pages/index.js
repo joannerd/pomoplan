@@ -1,23 +1,29 @@
 import { useState, useEffect } from 'react';
-import { TaskContext, TimerContext } from '../lib/context';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import { DndProvider } from 'react-dnd';
+import { TaskContext, TimerContext, ErrorContext } from '../lib/context';
 import { TASKS, BREAK_TIMER, SESSION_TIMER } from '../lib/util';
+import { types, lengthError, inputError } from '../lib/errors';
 import Head from 'next/head'
 import Home from '../components/Home';
 import TimerBar from '../components/TimerBar';
 
-const Pomoplan = ({ timerState, taskState }) => (
+const Pomoplan = ({ timerState, taskState, errorState }) => (
   <div className="flex-column-centered container">
     <Head>
       <title>Pomoplan</title>
       <link rel="icon" href="/favicon.ico" />
       <link
         href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap"
-        rel="stylesheet" />
+        rel="stylesheet"
+      />
     </Head>
     <TimerContext.Provider value={timerState}>
       <header>
         <h1>Pomoplan</h1>
-        <TimerBar />
+        <ErrorContext.Provider value={errorState}>
+          <TimerBar />
+        </ErrorContext.Provider>
       </header>
 
       <TaskContext.Provider value={taskState}>
@@ -46,6 +52,7 @@ const Root = () => {
   const [sessionSeconds, setSessionSeconds] = useState(sessionLength * 60);
   const [isBreakActive, setIsBreakActive] = useState(false);
   const [isSessionActive, setIsSessionActive] = useState(false);
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     const storedTasks = JSON.parse(localStorage.getItem(TASKS));
@@ -107,6 +114,24 @@ const Root = () => {
     localStorage.setItem(SESSION_TIMER, sessionSeconds);
   };
 
+  const setNewLengthError = (type, minOrMax, length) => {
+    const newError = lengthError(type, minOrMax, length);
+    setErrors((errors) => ({ ...errors, ...newError }));
+  };
+
+  const setNewInputError = (type) => {
+    const newError = inputError(type);
+    setErrors((errors) => ({ ...errors, ...newError }));
+  };
+
+  const clearErrors = () => setErrors([]);
+  const clearError = (id) => {
+    const updatedErrors = { ...errors };
+    const type = updatedErrors[id].type;
+    delete updatedErrors[id];
+    setErrors(updatedErrors);
+  };
+
   const taskState = {
     tasks,
     createTask,
@@ -131,7 +156,24 @@ const Root = () => {
     setIsSessionActive,
   };
 
-  return <Pomoplan timerState={timerState} taskState={taskState} />;
+  const errorState = {
+    errors,
+    types,
+    setNewLengthError,
+    setNewInputError,
+    clearErrors,
+    clearError,
+  };
+
+  return (
+    <DndProvider backend={HTML5Backend}>
+      <Pomoplan
+        timerState={timerState}
+        taskState={taskState}
+        errorState={errorState}
+      />
+    </DndProvider>
+  );
 };
 
 export default Root;

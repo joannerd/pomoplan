@@ -1,5 +1,5 @@
-import { useState, useEffect, useContext, useRef } from 'react';
-import { TimerContext } from '../lib/context';
+import { useState, useEffect, useContext } from 'react';
+import { TimerContext, ErrorContext } from '../lib/context';
 import Stopwatch from './Stopwatch';
 import ValidationErrors from './ValidationErrors';
 
@@ -19,45 +19,59 @@ const TimerBar = () => {
     isSessionActive,
     setIsSessionActive,
   } = useContext(TimerContext);
-  const ref = useRef();
+  const {
+    types,
+    setNewLengthError,
+    setNewInputError,
+    clearErrors,
+  } = useContext(ErrorContext);
+  const { SESSION, BREAK, MIN, MAX } = types;
   const [sessionNumber, setSessionNumber] = useState(1);
   const [sessionInput, setSessionInput] = useState(sessionLength.toString());
-  const [errors, setErrors] = useState({});
-
+  const [breakInput, setBreakInput] = useState('15');
   const clearSessionInput = () => setSessionInput('');
+  const clearBreakInput = () => setBreakInput('');
 
   const updateSession = (e) => {
-    const inputLength = e.target.value;
-    setErrors([]);
+    const input = e.target.value;
+    clearErrors();
 
-    if (inputLength.length < 3) {
-      setSessionInput(inputLength);
-      let length = parseInt(inputLength, 10);
-      const id = new Date().getTime();
-      const isValid = length <= 30 && length >= 20;
-      if (length > 30) {
-        length = 30;
-        const maxLengthError = {
-          [id] : {
-            id,
-            message: 'Maximum session length is 30 minutes.',
-          },
-        };
+    if (input.length < 3) {
+      setSessionInput(input);
+      validateLength(SESSION, input);
+    } else {
+      setNewInputError(SESSION);
+    }
+  };
 
-        setErrors((errors) => ({ ...errors, ...maxLengthError }));
-      } else if (length < 20) {
-        length = 20;
-        const minLengthError = {
-          [id]: {
-            id,
-            message: 'Minimum session length is 20 minutes.',
-          },
-        };
+  const updateBreak = (e) => {
+    const input = e.target.value;
+    clearErrors();
 
-        setErrors((errors) => ({ ...errors, ...minLengthError }));
-      } else if (isValid) {
-        setSessionLength(length);
+    if (input.length < 3) {
+      setBreakInput(input);
+      validateLength(BREAK, input);
+    } else {
+      setNewInputError(BREAK);
+    }
+  };
+
+  const validateLength = (type, input) => {
+    let length = parseInt(input, 10);
+    let minLength = 15;
+    if (type === SESSION) minLength = 20;
+
+    const isValid = length <= 30 && length >= minLength;
+    if (isValid) {
+      if (type === SESSION) {
+        setSessionLength(length)
       }
+    }
+
+    if (length > 30) {
+      setNewLengthError(type, MAX, 30);
+    } else if (length < minLength) {
+      setNewLengthError(type, MIN, minLength);
     }
   };
 
@@ -71,29 +85,18 @@ const TimerBar = () => {
 
   useEffect(() => {
     if (sessionNumber === 4) {
-      setBreakLength(15);
+      setBreakLength(parseInt(breakInput, 10));
       setSessionNumber(1);
     };
   }, [sessionNumber])
 
-  useEffect(() => {
-    if (errors.length) setErrors([]);
-  }, []);
-
-  const clearError = (id) => {
-    const updatedErrors = { ...errors };
-    delete updatedErrors[id];
-    setErrors(updatedErrors);
-    clearSessionInput();
-    ref.current.focus();
-  };
-
   return (
     <div id="clock">
-      <div className="session-length">
+      <ValidationErrors />
+
+      <div>
         <h2>Session</h2>
         <input
-          ref={ref}
           type="number"
           value={sessionInput}
           onClick={clearSessionInput}
@@ -102,7 +105,19 @@ const TimerBar = () => {
           max="30"
           required
         />
-        <ValidationErrors errors={Object.values(errors)} clearError={clearError} />
+      </div>
+
+      <div>
+        <h2>4th Break</h2>
+        <input
+          type="number"
+          value={breakInput}
+          onClick={clearBreakInput}
+          onChange={updateBreak}
+          min="15"
+          max="30"
+          required
+        />
       </div>
 
       <Stopwatch

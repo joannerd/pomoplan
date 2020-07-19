@@ -1,8 +1,7 @@
 import React, { useRef, useState, useContext } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import { TaskContext } from '../lib/context';
-import { IS_ARCHIVED, IS_DONE, TASK, CHECKBOX,
-} from '../lib/util';
+import { IS_ARCHIVED, IS_DONE, TASK, CHECKBOX } from '../lib/util';
 
 const Task = ({ index, task, moveCard }) => {
   const ref = useRef(null);

@@ -147,7 +147,7 @@ article {
   cursor: pointer;
 }
 
-.task:active, .task:focus {
+.task:active, .task:focus, .task input:active {
   cursor: -webkit-grabbing;
   cursor: -moz-grabbing;
   cursor: grabbing;
@@ -181,7 +181,7 @@ article {
   background-color: rgb(170, 170, 170);
 }
 
-.session-length {
+.pomodoro-options {
   position: relative;
 }
 
@@ -225,12 +225,12 @@ article {
   transform: rotate(270deg);
 }
 
-#errors {
+.error {
   color: red;
-  position: absolute;
   background: rgb(255, 255, 255);
   border: 1px solid red;
   border-radius: 3px;
+  padding: 5px;
 }
 
 *:disabled, *:disabled:hover {
