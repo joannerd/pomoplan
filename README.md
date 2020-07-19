@@ -2,9 +2,9 @@
 # Pomoplan
 
 Pomoplan is a [Next.js](https://nextjs.org/docs/getting-started) app built with
-productive and healthy task management in mind. The goal of Pomoplan is to help
-you stay healthy and work smart by taking breaks to reset your mind and staying
-focused during interval-based work sessions.
+healthy and productive task management in mind. The goal of Pomoplan is to help
+you manage work intervals (known as a _pomodoro_) to with taking breaks to reset
+your mind and staying focused during the interval-based work sessions.
 
 [Pomoplan Live](https://pomoplan.vercel.app/)
 
@@ -18,11 +18,10 @@ The balance between the break timer and work session timer is based on the
 
 ## Features
 
-Each work session (known as a _pomodoro_) can be between 20-30 minutes. The
-break following each pomodoro will be either 5 or 10 minutes. The first three
-pomodoros are followed by a 5 minute break, while the fourth pomodoro is
-followed by a 15-30 minute break. You can choose the length of your pomodoros
-(20-30 minutes) and the length of your fourth break (15-30 minutes).
+Each work session can be between 20-30 minutes. The first three pomodoros are
+followed by a 5-minute break, while the fourth pomodoro is followed by a 15-30
+minute break. You can choose the length of your pomodoros (20-30 minutes) and
+the length of your fourth break (15-30 minutes).
 
 ## Installation
 
