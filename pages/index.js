@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import { TouchBackend } from 'react-dnd-touch-backend';
 import { DndProvider } from 'react-dnd';
 import { TaskContext, TimerContext, ErrorContext } from '../lib/context';
 import { TASKS, BREAK_TIMER, SESSION_TIMER } from '../lib/util';
@@ -53,6 +54,7 @@ const Root = () => {
   const [isBreakActive, setIsBreakActive] = useState(false);
   const [isSessionActive, setIsSessionActive] = useState(false);
   const [errors, setErrors] = useState({});
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
 
   useEffect(() => {
     const storedTasks = JSON.parse(localStorage.getItem(TASKS));
@@ -168,8 +170,19 @@ const Root = () => {
     clearError,
   };
 
+  useEffect(() => {
+    console.log(window)
+    if ('ontouchstart' in window) {
+      setIsTouchDevice(true);
+    } else {
+      setIsTouchDevice(false);
+    }
+  }, []);
+
+  const backendForDND = isTouchDevice ? TouchBackend : HTML5Backend;
+
   return (
-    <DndProvider backend={HTML5Backend}>
+    <DndProvider backend={backendForDND}>
       <Pomoplan
         timerState={timerState}
         taskState={taskState}
