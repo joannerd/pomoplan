@@ -64,10 +64,10 @@ const TimerBar = () => {
   
   useEffect(() => {
     if (sessionNumber === 4) {
-      breakTimer.setLength(parseInt(breakInput, 10));
+      breakTimer.setSeconds(parseInt(breakInput, 10) * 60);
       setSessionNumber(1);
     } else {
-      breakTimer.setLength(parseInt(breakInput, 10));
+      breakTimer.setSeconds(parseInt(breakTimer.length, 10) * 60);
     }
 
   }, [sessionNumber])

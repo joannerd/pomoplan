@@ -48,8 +48,8 @@ const Root = () => {
   const [numTasks, setNumTasks] = useState(0);
   const [breakLength, setBreakLength] = useState(5);
   const [sessionLength, setSessionLength] = useState(25);
-  const [breakSeconds, setBreakSeconds] = useState(3);
-  const [sessionSeconds, setSessionSeconds] = useState(3);
+  const [breakSeconds, setBreakSeconds] = useState(breakLength * 60);
+  const [sessionSeconds, setSessionSeconds] = useState(sessionLength * 60);
   const [isBreakActive, setIsBreakActive] = useState(false);
   const [isSessionActive, setIsSessionActive] = useState(false);
   const [errors, setErrors] = useState({});
