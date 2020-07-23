@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider } from 'react-dnd';
 import { TaskContext, TimerContext, ErrorContext } from '../lib/context';
-import { TASKS, BREAK_TIMER, SESSION_TIMER } from '../lib/util';
+import { TASKS, BREAK_TIMER, SESSION_TIMER, ACTIVE_TIMER } from '../lib/util';
 import { types, lengthError, inputError } from '../lib/errors';
 import Head from 'next/head'
 import Home from '../components/Home';
@@ -48,8 +48,8 @@ const Root = () => {
   const [numTasks, setNumTasks] = useState(0);
   const [breakLength, setBreakLength] = useState(5);
   const [sessionLength, setSessionLength] = useState(25);
-  const [breakSeconds, setBreakSeconds] = useState(breakLength * 60);
-  const [sessionSeconds, setSessionSeconds] = useState(sessionLength * 60);
+  const [breakSeconds, setBreakSeconds] = useState(3);
+  const [sessionSeconds, setSessionSeconds] = useState(3);
   const [isBreakActive, setIsBreakActive] = useState(false);
   const [isSessionActive, setIsSessionActive] = useState(false);
   const [errors, setErrors] = useState({});
@@ -58,14 +58,17 @@ const Root = () => {
     const storedTasks = JSON.parse(localStorage.getItem(TASKS));
     const storedBreakSeconds = JSON.parse(localStorage.getItem(BREAK_TIMER));
     const storedSessionSeconds = JSON.parse(localStorage.getItem(SESSION_TIMER));
+    const activeTimer = localStorage.getItem(ACTIVE_TIMER);
     if (storedTasks) setTasks(storedTasks);
     if (storedBreakSeconds) setBreakSeconds(storedBreakSeconds);
     if (storedSessionSeconds) setSessionSeconds(storedSessionSeconds);
-
-    return () => {
-      localStorage.setItem(BREAK_TIMER, breakSeconds);
-      localStorage.setItem(SESSION_TIMER, sessionSeconds);
+    if (activeTimer !== 'null') {
+      activeTimer === BREAK_TIMER
+        ? setIsBreakActive(true)
+        : setIsSessionActive(true);
     }
+
+    return () => updateStoredTimers();
   }, [])
 
   useEffect(() => {
@@ -107,11 +110,20 @@ const Root = () => {
   const removeStoredTimers = () => {
     localStorage.removeItem(BREAK_TIMER);
     localStorage.removeItem(SESSION_TIMER);
+    localStorage.removeItem(ACTIVE_TIMER);
   };
 
   const updateStoredTimers = () => {
+    let activeTimer = null;
+    if (isBreakActive) {
+      activeTimer = BREAK_TIMER;
+    } else if (isSessionActive) {
+      activeTimer = SESSION_TIMER;
+    }
+
     localStorage.setItem(BREAK_TIMER, breakSeconds);
     localStorage.setItem(SESSION_TIMER, sessionSeconds);
+    localStorage.setItem(ACTIVE_TIMER, activeTimer);
   };
 
   const setNewLengthError = (type, minOrMax, length) => {

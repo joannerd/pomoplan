@@ -66,7 +66,10 @@ const TimerBar = () => {
     if (sessionNumber === 4) {
       breakTimer.setLength(parseInt(breakInput, 10));
       setSessionNumber(1);
-    };
+    } else {
+      breakTimer.setLength(parseInt(breakInput, 10));
+    }
+
   }, [sessionNumber])
 
   return (
@@ -105,6 +108,7 @@ const TimerBar = () => {
             type="Break"
             stopwatchTimer={breakTimer}
             setIsOtherTimerActive={sessionTimer.setIsActive}
+            isOtherTimerActive={sessionTimer.isActive}
             setSessionNumber={setSessionNumber}
             sessionNumber={sessionNumber}
           />
@@ -113,6 +117,7 @@ const TimerBar = () => {
             type="Session"
             stopwatchTimer={sessionTimer}
             setIsOtherTimerActive={breakTimer.setIsActive}
+            isOtherTimerActive={breakTimer.isActive}
             setSessionNumber={setSessionNumber}
             sessionNumber={sessionNumber}
           />

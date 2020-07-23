@@ -7,7 +7,7 @@ const Stopwatch = ({
   stopwatchTimer,
   setIsOtherTimerActive,
   setSessionNumber,
-  sessionNumber,
+  isOtherTimerActive,
 }) => {
   const { updateStoredTimers } = useContext(TimerContext);
   const { isActive, setIsActive, seconds, setSeconds, length } = stopwatchTimer;
@@ -39,9 +39,8 @@ const Stopwatch = ({
   }, [isActive, seconds]);
 
   const buttonName = isActive ? 'Pause' : 'Start';
-  const isButtonDisabled = (type === 'Break') && (sessionNumber === 1);
 
-  const button = isButtonDisabled ? (
+  const button = isOtherTimerActive ? (
     <button onClick={toggleTimer} disabled>
       {buttonName}
     </button>
