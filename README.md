@@ -8,6 +8,9 @@ your mind and staying focused during the interval-based work sessions.
 
 [Pomoplan Live](https://pomoplan.vercel.app/)
 
+![pomoplan](https://user-images.githubusercontent.com/32081352/90709563-5684e600-e251-11ea-94fe-f2137440810e.gif)
+
+
 ## Inspiration
 
 The application was inspired by wanting to experiment with
