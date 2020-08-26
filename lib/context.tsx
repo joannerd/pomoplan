@@ -1,5 +1,21 @@
 import { createContext, useContext } from 'react';
-import { types } from './errors';
+import { types, Error } from './errors';
+
+export type ErrorContextValueType = {
+  errors: {
+    [id: number]: Error;
+  };
+  types: {
+    SESSION: string;
+    BREAK: string;
+    MAX: string;
+    MIN: string;
+  }
+  setNewLengthError: () => void;
+  setNewInputError: () => void;
+  clearErrors: () => void;
+  clearError: () => void;
+};
 
 export const TaskContext = createContext({
   tasks: {},
@@ -29,10 +45,10 @@ export const TimerContext = createContext({
   removeStoredTimers: () => {},
 });
 
-export const ErrorContext = createContext({
+export const ErrorContext: React.Context<ErrorContextValueType> = createContext<ErrorContextValueType>({
   errors: {},
   types,
-  setNewInputError: () => {},
+  setNewLengthError: () => {},
   setNewInputError: () => {},
   clearErrors: () => {},
   clearError: () => {},
@@ -77,6 +93,7 @@ export const useError = () => {
     setNewLengthError,
     setNewInputError,
     clearErrors,
+    clearError,
   } = useContext(ErrorContext);
 
   return {
@@ -85,5 +102,6 @@ export const useError = () => {
     setNewLengthError,
     setNewInputError,
     clearErrors,
+    clearError,
   };
 };
