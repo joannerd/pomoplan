@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider } from 'react-dnd';
 import { TaskContext, TimerContext, ErrorContext } from '../lib/context';
@@ -44,15 +44,17 @@ const Pomoplan = ({ timerState, taskState, errorState }) => (
 );
 
 const Root = () => {
-  const [tasks, setTasks] = useState({});
-  const [numTasks, setNumTasks] = useState(0);
-  const [breakLength, setBreakLength] = useState(5);
-  const [sessionLength, setSessionLength] = useState(25);
-  const [breakSeconds, setBreakSeconds] = useState(breakLength * 60);
-  const [sessionSeconds, setSessionSeconds] = useState(sessionLength * 60);
-  const [isBreakActive, setIsBreakActive] = useState(false);
-  const [isSessionActive, setIsSessionActive] = useState(false);
   const [errors, setErrors] = useState({});
+  const [tasks, setTasks] = useState({});
+  const numTasks = Object.keys(tasks).length;
+
+  const [breakLength, setBreakLength] = useState(5);
+  const [breakSeconds, setBreakSeconds] = useState(breakLength * 60);
+  const [isBreakActive, setIsBreakActive] = useState(false);
+  
+  const [sessionLength, setSessionLength] = useState(25);
+  const [sessionSeconds, setSessionSeconds] = useState(sessionLength * 60);
+  const [isSessionActive, setIsSessionActive] = useState(false);
 
   useEffect(() => {
     const storedTasks = JSON.parse(localStorage.getItem(TASKS));
@@ -70,10 +72,6 @@ const Root = () => {
 
     return () => updateStoredTimers();
   }, [])
-
-  useEffect(() => {
-    setNumTasks(Object.values(tasks).length);
-  }, [tasks])
 
   const createTask = (description) => {
     const id = new Date().getTime();
@@ -143,14 +141,14 @@ const Root = () => {
     setErrors(updatedErrors);
   };
 
-  const taskState = {
+  const taskState = useMemo(() => ({
     tasks,
     createTask,
     deleteTask,
     updateTask,
-  };
+  }), [tasks]);
 
-  const timerState = {
+  const timerState = useMemo(() => ({
     breakTimer: {
       length: breakLength,
       setLength: setBreakLength,
@@ -169,16 +167,23 @@ const Root = () => {
     },
     updateStoredTimers,
     removeStoredTimers,
-  };
+  }), [
+    breakLength,
+    breakSeconds,
+    isBreakActive,
+    sessionLength,
+    sessionSeconds,
+    isSessionActive,
+  ]);
 
-  const errorState = {
+  const errorState = useMemo(() => ({
     errors,
     types,
     setNewLengthError,
     setNewInputError,
     clearErrors,
     clearError,
-  };
+  }), [errors]);
 
   return (
     <DndProvider backend={HTML5Backend}>

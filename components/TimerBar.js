@@ -75,7 +75,7 @@ const TimerBar = () => {
   return (
     <div id="clock">
       <span className="flex-row-centered">
-        <div className="flex-row-centered mobile-timer-bar">
+        <div className="flex-row-centered">
           <ValidationErrors />
 
           <div>
@@ -103,7 +103,7 @@ const TimerBar = () => {
           </div>
         </div>
 
-        <div className="flex-row-centered mobile-timer-bar">
+        <div className="flex-row-centered">
           <Stopwatch
             type="Break"
             stopwatchTimer={breakTimer}
