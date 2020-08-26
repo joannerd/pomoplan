@@ -1,9 +1,9 @@
-import React, { useState, useContext } from 'react';
-import { TaskContext } from '../lib/context';
+import React, { useState } from 'react';
+import { useTask } from '../lib/context';
 
 const TaskForm = () => {
   const [description, setDescription] = useState('');
-  const { createTask } = useContext(TaskContext);
+  const { createTask } = useTask();
   const handleInputChange = (e) => setDescription(e.target.value);
 
   const handleSubmit = (e) => {

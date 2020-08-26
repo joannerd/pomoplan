@@ -1,5 +1,4 @@
-import { useContext } from 'react';
-import { TimerContext } from '../lib/context';
+import { useTimer } from '../lib/context';
 import { BREAK_END_NOTES, SESSION_END_NOTES } from '../lib/sound';
 import TaskForm from './TaskForm';
 import TaskList from './TaskList';
@@ -7,7 +6,7 @@ import ProgressCircle from './ProgressCircle';
 import StopwatchButton from './StopwatchButton';
 
 const Home = () => {
-  const { breakTimer, sessionTimer } = useContext(TimerContext);
+  const { breakTimer, sessionTimer } = useTimer();
 
   const stopwatchButton = breakTimer.isActive
     ? <StopwatchButton

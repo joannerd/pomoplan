@@ -1,6 +1,6 @@
-import { useEffect, useContext } from 'react';
+import { useEffect } from 'react';
 import { formatTime } from '../lib/util';
-import { TimerContext } from '../lib/context';
+import { useTimer } from '../lib/context';
 
 const Stopwatch = ({
   type,
@@ -9,7 +9,7 @@ const Stopwatch = ({
   setSessionNumber,
   isOtherTimerActive,
 }) => {
-  const { updateStoredTimers } = useContext(TimerContext);
+  const { updateStoredTimers } = useTimer();
   const { isActive, setIsActive, seconds, setSeconds, length } = stopwatchTimer;
 
   let timer = null;

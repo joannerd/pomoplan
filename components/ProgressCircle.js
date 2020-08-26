@@ -1,8 +1,8 @@
-import { useEffect, useState, useContext } from 'react';
-import { TimerContext } from '../lib/context';
+import { useEffect, useState } from 'react';
+import { useTimer } from '../lib/context';
 
 const ProgressCircle = () => {
-  const { breakTimer, sessionTimer } = useContext(TimerContext);
+  const { breakTimer, sessionTimer } = useTimer();
   const [strokeDashoffset, setStrokeDashoffset] = useState(100);
 
   useEffect(() => {

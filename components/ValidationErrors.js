@@ -1,8 +1,8 @@
-import { useContext, useEffect } from 'react';
-import { ErrorContext } from '../lib/context';
+import { useEffect } from 'react';
+import { useError } from '../lib/context';
 
 const ValidationErrors = () => {
-  const { errors, clearErrors, clearError } = useContext(ErrorContext);
+  const { errors, clearErrors, clearError } = useError();
 
   useEffect(() => {
     if (errors.length) clearErrors();
