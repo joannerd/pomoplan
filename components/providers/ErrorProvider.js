@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
-import { ErrorContext } from '../context';
-import { types, lengthError, inputError } from '../errors';
+import { ErrorContext } from '../../lib/context';
+import { types, lengthError, inputError } from '../../lib/errors';
 
 const ErrorProvider = ({ children }) => {
   const [errors, setErrors] = useState({});

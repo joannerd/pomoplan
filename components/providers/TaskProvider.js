@@ -1,6 +1,6 @@
 import { useEffect, useState, useMemo } from 'react';
-import { TaskContext } from '../context';
-import { TASKS } from '../util';
+import { TaskContext } from '../../lib/context';
+import { TASKS } from '../../lib/util';
 
 const TaskProvider = ({ children }) => {
   const [tasks, setTasks] = useState({});

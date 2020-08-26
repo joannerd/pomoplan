@@ -1,9 +1,9 @@
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider } from 'react-dnd';
 
-import TaskProvider from '../lib/providers/TaskProvider';
-import TimerProvider from '../lib/providers/TimerProvider';
-import ErrorProvider from '../lib/providers/ErrorProvider';
+import TaskProvider from '../components/providers/TaskProvider';
+import TimerProvider from '../components/providers/TimerProvider';
+import ErrorProvider from '../components/providers/ErrorProvider';
 
 import Head from 'next/head'
 import Home from '../components/Home';
