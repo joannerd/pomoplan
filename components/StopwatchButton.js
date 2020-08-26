@@ -1,29 +1,19 @@
-import { useEffect, useState } from 'react';
-import { formatTime } from '../lib/util';
-import { createSound, stopSound } from '../lib/sound';
+const StopwatchButton = ({ isOtherTimerActive, toggleTimer, isActive }) => {
+  const buttonName = isActive ? 'Pause' : 'Start';
 
-const StopwatchButton = ({ seconds, notes }) => {
-  const [isBeeping, setIsBeeping] = useState(false);
-
-  const handleStopSoundClick = () => {
-    stopSound();
-    setIsBeeping(false);
-  };
-
-  useEffect(() => {
-    if (seconds === 0) {
-      createSound(notes);
-      setIsBeeping(true);
-    };
-  }, [seconds]);
-
-  const stopSoundButton = <button onClick={handleStopSoundClick}>Stop</button>;
+  if (isOtherTimerActive) {
+    return (
+      <button onClick={toggleTimer} disabled>
+        {buttonName}
+      </button>
+    );
+  }
 
   return (
-    <span className="progress-circle-label">
-      {isBeeping ? stopSoundButton : formatTime(seconds)}
-    </span>
+    <button onClick={toggleTimer} className={buttonName.toLowerCase()}>
+      {buttonName}
+    </button>
   );
-}
+};
 
 export default StopwatchButton;

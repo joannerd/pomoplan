@@ -3,16 +3,16 @@ import { BREAK_END_NOTES, SESSION_END_NOTES } from '../lib/sound';
 import TaskForm from './TaskForm';
 import TaskList from './TaskList';
 import ProgressCircle from './ProgressCircle';
-import StopwatchButton from './StopwatchButton';
+import ProgressCircleButton from './ProgressCircleButton';
 
 const Home = () => {
   const { breakTimer, sessionTimer } = useTimer();
 
-  const stopwatchButton = breakTimer.isActive
-    ? <StopwatchButton
+  const progressCircleButton = breakTimer.isActive
+    ? <ProgressCircleButton
         seconds={breakTimer.seconds}
         notes={BREAK_END_NOTES} />
-    : <StopwatchButton
+    : <ProgressCircleButton
         seconds={sessionTimer.seconds}
         notes={SESSION_END_NOTES} />;
   
@@ -23,7 +23,7 @@ const Home = () => {
 
         <div className="progress-circle">
           <ProgressCircle />
-          {stopwatchButton}
+          {progressCircleButton}
         </div>
       </article>
       <article>

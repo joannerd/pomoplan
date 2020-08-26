@@ -35,7 +35,7 @@ const Root = () => (
 
       <footer className="flex-row-centered">
         <a
-          href="https://github.com/junnac"
+          href="https://junnac.com/"
           target="_blank"
           rel="noopener noreferrer"
         >

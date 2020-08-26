@@ -1,10 +1,10 @@
-html * {
+#__next * {
 	font-family: 'Roboto', sans-serif;
   transition: 0.3s;
   box-sizing: border-box;
 }
 
-html *:focus:not(input):not(a) {
+#__next *:focus:not(input):not(a) {
   box-shadow: 0px 2px 3px rgb(80, 80, 80)
 }
 
