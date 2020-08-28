@@ -1,22 +1,10 @@
+import { Error, ErrorType } from '../context/ErrorContext';
+
 export const types = {
   SESSION: 'session',
   BREAK: 'break',
   MIN: 'Minimum',
   MAX: 'Maximum',
-};
-
-export type Error = {
-  [id: number]: {
-    id: number,
-    message: string;
-  };
-};
-
-export enum ErrorType {
-  SESSION = 'session',
-  BREAK = 'break',
-  MIN = 'Minimum',
-  MAX = 'Maximum',
 };
 
 export const lengthError = (type: ErrorType, minOrMax: string, length: number): Error => {
