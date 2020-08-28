@@ -1,12 +1,12 @@
-import React, { useRef, useState, useContext } from 'react';
+import React, { useRef, useState } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
-import { TaskContext } from '../lib/context';
+import { useTask } from '../lib/context';
 import { IS_ARCHIVED, IS_DONE, TASK, CHECKBOX } from '../lib/util';
 
 const Task = ({ index, task, moveCard }) => {
   const ref = useRef(null);
   const { id, description, isDone, isArchived } = task;
-  const { deleteTask, updateTask } = useContext(TaskContext);
+  const { deleteTask, updateTask } = useTask();
   const [taskDescription, setTaskDescription] = useState(description);
   const [checkbox, setCheckbox] = useState(isDone ? CHECKBOX.checked : CHECKBOX.unchecked);
   const updateValue = (e) => setTaskDescription(e.target.value);

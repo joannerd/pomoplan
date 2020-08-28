@@ -1,5 +1,5 @@
-import { useState, useEffect, useContext } from 'react';
-import { TimerContext, ErrorContext } from '../lib/context';
+import { useState, useEffect } from 'react';
+import { useTimer, useError } from '../lib/context';
 import Stopwatch from './Stopwatch';
 import ValidationErrors from './ValidationErrors';
 
@@ -8,13 +8,14 @@ const TimerBar = () => {
     breakTimer,
     sessionTimer,
     removeStoredTimers,
-  } = useContext(TimerContext);
+  } = useTimer();
+
   const {
     types,
     setNewLengthError,
     setNewInputError,
     clearErrors,
-  } = useContext(ErrorContext);
+  } = useError();
 
   const { SESSION, BREAK, MIN, MAX } = types;
   const [sessionNumber, setSessionNumber] = useState(1);
@@ -75,7 +76,7 @@ const TimerBar = () => {
   return (
     <div id="clock">
       <span className="flex-row-centered">
-        <div className="flex-row-centered mobile-timer-bar">
+        <div className="flex-row-centered">
           <ValidationErrors />
 
           <div>
@@ -103,7 +104,7 @@ const TimerBar = () => {
           </div>
         </div>
 
-        <div className="flex-row-centered mobile-timer-bar">
+        <div className="flex-row-centered">
           <Stopwatch
             type="Break"
             stopwatchTimer={breakTimer}

@@ -1,6 +1,7 @@
-import { useEffect, useContext } from 'react';
+import { useEffect } from 'react';
 import { formatTime } from '../lib/util';
-import { TimerContext } from '../lib/context';
+import { useTimer } from '../lib/context';
+import StopwatchButton from './StopwatchButton';
 
 const Stopwatch = ({
   type,
@@ -9,7 +10,7 @@ const Stopwatch = ({
   setSessionNumber,
   isOtherTimerActive,
 }) => {
-  const { updateStoredTimers } = useContext(TimerContext);
+  const { updateStoredTimers } = useTimer();
   const { isActive, setIsActive, seconds, setSeconds, length } = stopwatchTimer;
 
   let timer = null;
@@ -22,7 +23,6 @@ const Stopwatch = ({
       toggleTimer();
       setSeconds(length * 60);
       setSessionNumber(sessionNumber => sessionNumber + 1);
-      setIsOtherTimerActive(true);
     }
 
     if (isActive) {
@@ -38,25 +38,18 @@ const Stopwatch = ({
     return () => clearInterval(timer);
   }, [isActive, seconds]);
 
-  const buttonName = isActive ? 'Pause' : 'Start';
-
-  const button = isOtherTimerActive ? (
-    <button onClick={toggleTimer} disabled>
-      {buttonName}
-    </button>
-  ) : (
-    <button onClick={toggleTimer} className={buttonName.toLowerCase()}>
-      {buttonName}
-    </button>
-  );
-
   return (
     <>
       <div>
         <h2>{type}</h2>
         <h3>{formatTime(seconds)}</h3>
       </div>
-      {button}
+
+      <StopwatchButton
+        isActive={isActive}
+        isOtherTimerActive={isOtherTimerActive}
+        toggleTimer={toggleTimer}
+      />
     </>
   );
 };
