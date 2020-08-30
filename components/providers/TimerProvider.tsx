@@ -51,7 +51,6 @@ const TimerProvider = ({ children }: IProviderProps): React.ReactElement => {
     localStorage.setItem(SESSION_TIMER, sessionSeconds.toString());
     localStorage.setItem(ACTIVE_TIMER, activeTimer);
   };
-
   const removeStoredTimers = (): void => {
     localStorage.removeItem(BREAK_TIMER);
     localStorage.removeItem(SESSION_TIMER);

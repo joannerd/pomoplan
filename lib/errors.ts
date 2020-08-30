@@ -1,6 +1,13 @@
-import { IErrors, ErrorType } from '../context/ErrorContext';
+import { Error, ErrorType } from '../context/ErrorContext';
 
-export const lengthError = (type: ErrorType, minOrMax: string, length: number): IErrors => {
+export const types = {
+  SESSION: 'session',
+  BREAK: 'break',
+  MIN: 'Minimum',
+  MAX: 'Maximum',
+};
+
+export const lengthError = (type: ErrorType, minOrMax: string, length: number): Error => {
   const id: number = new Date().getTime();
   return {
     [id]: {
@@ -10,7 +17,7 @@ export const lengthError = (type: ErrorType, minOrMax: string, length: number): 
   };
 };
 
-export const inputError = (type: ErrorType): IErrors => {
+export const inputError = (type: ErrorType): Error => {
   const id = new Date().getTime();
   return {
     [id]: {
