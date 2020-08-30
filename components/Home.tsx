@@ -1,20 +1,14 @@
-import { useTimer } from '../lib/context';
-import { BREAK_END_NOTES, SESSION_END_NOTES } from '../lib/sound';
+import { useTimer } from '../context/TimerContext';
+import { INotes, BREAK_END_NOTES, SESSION_END_NOTES } from '../lib/sound';
 import TaskForm from './TaskForm';
 import TaskList from './TaskList';
 import ProgressCircle from './ProgressCircle';
 import ProgressCircleButton from './ProgressCircleButton';
 
-const Home = () => {
+const Home = (): React.ReactElement => {
   const { breakTimer, sessionTimer } = useTimer();
-
-  const progressCircleButton = breakTimer.isActive
-    ? <ProgressCircleButton
-        seconds={breakTimer.seconds}
-        notes={BREAK_END_NOTES} />
-    : <ProgressCircleButton
-        seconds={sessionTimer.seconds}
-        notes={SESSION_END_NOTES} />;
+  const seconds: number = breakTimer.isActive ? breakTimer.seconds : sessionTimer.seconds;
+  const notes: INotes = breakTimer.isActive ? BREAK_END_NOTES : SESSION_END_NOTES;
   
   return (
     <main>
@@ -23,7 +17,10 @@ const Home = () => {
 
         <div className="progress-circle">
           <ProgressCircle />
-          {progressCircleButton}
+          <ProgressCircleButton
+            seconds={seconds}
+            notes={notes}
+          />
         </div>
       </article>
       <article>

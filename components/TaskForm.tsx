@@ -1,12 +1,15 @@
-import React, { useState } from 'react';
-import { useTask } from '../lib/context';
+import React, { useState, FormEvent } from 'react';
+import { useTask } from '../context/TaskContext';
 
-const TaskForm = () => {
-  const [description, setDescription] = useState('');
+const TaskForm = (): React.ReactElement => {
+  const [description, setDescription] = useState<string>('');
   const { createTask } = useTask();
-  const handleInputChange = (e) => setDescription(e.target.value);
 
-  const handleSubmit = (e) => {
+  const handleInputChange = (e: React.ChangeEvent<{ value: unknown }>): void => {
+    setDescription(e.target.value as string);
+  };
+
+  const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
     createTask(description);
     setDescription('');

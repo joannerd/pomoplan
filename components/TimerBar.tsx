@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
-import { useTimer, useError } from '../lib/context';
+import { useTimer } from '../context/TimerContext';
+import { useError, ErrorType } from '../context/ErrorContext';
 import Stopwatch from './Stopwatch';
 import ValidationErrors from './ValidationErrors';
 
-const TimerBar = () => {
+const TimerBar = (): React.ReactElement => {
   const {
     breakTimer,
     sessionTimer,
@@ -11,32 +12,31 @@ const TimerBar = () => {
   } = useTimer();
 
   const {
-    types,
     setNewLengthError,
     setNewInputError,
     clearErrors,
   } = useError();
 
-  const { SESSION, BREAK, MIN, MAX } = types;
-  const [sessionNumber, setSessionNumber] = useState(1);
-  const [sessionInput, setSessionInput] = useState(sessionTimer.length.toString());
-  const [breakInput, setBreakInput] = useState('15');
-  const updateBreak = (e) => updateInput(BREAK, e);
-  const updateSession = (e) => updateInput(SESSION, e);
+  const { SESSION, BREAK, MIN, MAX } = ErrorType;
+  const [sessionNumber, setSessionNumber] = useState<number>(1);
+  const [sessionInput, setSessionInput] = useState<string>(sessionTimer.length.toString());
+  const [breakInput, setBreakInput] = useState<string>('15');
+  const updateBreak = (e: React.ChangeEvent<{ value: unknown }>): void => updateInput(BREAK, e);
+  const updateSession = (e: React.ChangeEvent<{ value: unknown }>): void => updateInput(SESSION, e);
 
-  const updateInput = (type, e) => {
-    const input = e.target.value;
+  const updateInput = (type: ErrorType, e: React.ChangeEvent<{ value: unknown }>) => {
+    const input: string = e.target.value as string;
     clearErrors();
 
     if (input.length < 3) {
       (type === SESSION) ? setSessionInput(input) : setBreakInput(input);
       validateLength(type, input);
     } else {
-      setNewInputError(type);
+      setNewInputError();
     }
   };
 
-  const validateLength = (type, input) => {
+  const validateLength = (type: ErrorType, input: string) => {
     let length = parseInt(input, 10);
     let minLength = 15;
     if (type === SESSION) minLength = 20;
@@ -68,7 +68,7 @@ const TimerBar = () => {
       breakTimer.setSeconds(parseInt(breakInput, 10) * 60);
       setSessionNumber(1);
     } else {
-      breakTimer.setSeconds(parseInt(breakTimer.length, 10) * 60);
+      breakTimer.setSeconds(breakTimer.length * 60);
     }
 
   }, [sessionNumber])
@@ -111,7 +111,6 @@ const TimerBar = () => {
             setIsOtherTimerActive={sessionTimer.setIsActive}
             isOtherTimerActive={sessionTimer.isActive}
             setSessionNumber={setSessionNumber}
-            sessionNumber={sessionNumber}
           />
 
           <Stopwatch
@@ -120,7 +119,6 @@ const TimerBar = () => {
             setIsOtherTimerActive={breakTimer.setIsActive}
             isOtherTimerActive={breakTimer.isActive}
             setSessionNumber={setSessionNumber}
-            sessionNumber={sessionNumber}
           />
 
           <button onClick={reset} className="reset">

@@ -1,7 +1,15 @@
-import { useEffect } from 'react';
+import { useEffect, Dispatch, SetStateAction } from 'react';
 import { formatTime } from '../lib/util';
-import { useTimer } from '../lib/context';
+import { useTimer, ITimer } from '../context/TimerContext';
 import StopwatchButton from './StopwatchButton';
+
+interface IStopwatchProps {
+  type: string;
+  stopwatchTimer: ITimer;
+  isOtherTimerActive: boolean;
+  setIsOtherTimerActive: Dispatch<SetStateAction<boolean>>;
+  setSessionNumber: Dispatch<SetStateAction<number>>;
+};
 
 const Stopwatch = ({
   type,
@@ -9,33 +17,35 @@ const Stopwatch = ({
   setIsOtherTimerActive,
   setSessionNumber,
   isOtherTimerActive,
-}) => {
+}: IStopwatchProps): React.ReactElement => {
   const { updateStoredTimers } = useTimer();
   const { isActive, setIsActive, seconds, setSeconds, length } = stopwatchTimer;
 
-  let timer = null;
+  let timer: NodeJS.Timeout | null = null;
   const toggleTimer = () => setIsActive(!isActive);
   useEffect(() => setSeconds(length * 60), [length]);
 
   useEffect(() => {
-    if (seconds === 0) {
+    if (seconds === 0 && timer) {
       clearInterval(timer);
       toggleTimer();
       setSeconds(length * 60);
-      setSessionNumber(sessionNumber => sessionNumber + 1);
+      setSessionNumber((sessionNumber) => sessionNumber + 1);
     }
 
     if (isActive) {
       setIsOtherTimerActive(false);
       timer = setInterval(() => {
-        setSeconds(seconds => seconds - 1);
+        setSeconds((seconds) => seconds - 1);
         updateStoredTimers();
       }, 1000);
-    } else {
+    } else if (timer) {
       clearInterval(timer);
     }
 
-    return () => clearInterval(timer);
+    return () => {
+      if (timer) clearInterval(timer);
+    }
   }, [isActive, seconds]);
 
   return (

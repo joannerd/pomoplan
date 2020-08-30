@@ -9,6 +9,27 @@ import Head from 'next/head'
 import Home from '../components/Home';
 import TimerBar from '../components/TimerBar';
 
+// type CourseCardProps = {
+//   slug: string;
+//   title: string;
+//   description: string;
+//   subtitle?: string;
+//   percentComplete: number;
+//   isFavorite: boolean;
+// };
+
+// export type Practice = {
+//   identifier: string;
+//   practiceType: PracticeType;
+//   title: string;
+//   subtitle: string;
+//   markdown?: string;
+//   vimeoId?: string;
+//   githubUrl?: string;
+//   cloneUrl?: string;
+//   timeToComplete?: number;
+// };
+
 const Root = () => (
   <DndProvider backend={HTML5Backend}>
     <div className="flex-column-centered container">
@@ -34,11 +55,7 @@ const Root = () => (
       </TimerProvider>
 
       <footer className="flex-row-centered">
-        <a
-          href="https://junnac.com/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+        <a href="https://junnac.com/" target="_blank" rel="noopener noreferrer">
           © Joanna Chen
         </a>
       </footer>
