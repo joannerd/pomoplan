@@ -1,4 +1,4 @@
-import { Error, ErrorType } from '../context/ErrorContext';
+import { IError, ErrorType } from '../context/ErrorContext';
 
 export const types = {
   SESSION: 'session',
@@ -7,22 +7,18 @@ export const types = {
   MAX: 'Maximum',
 };
 
-export const lengthError = (type: ErrorType, minOrMax: string, length: number): Error => {
+export const lengthError = (type: ErrorType, minOrMax: string, length: number): IError => {
   const id: number = new Date().getTime();
   return {
-    [id]: {
-      id,
-      message: `${minOrMax} ${type} length is ${length} minutes.`,
-    },
+    id,
+    message: `${minOrMax} ${type} length is ${length} minutes.`,
   };
 };
 
-export const inputError = (type: ErrorType): Error => {
+export const inputError = (): IError => {
   const id = new Date().getTime();
   return {
-    [id]: {
-      id,
-      message: 'Input must be a 2-digit number.',
-    },
+    id,
+    message: 'Input must be a 2-digit number.',
   };
 };

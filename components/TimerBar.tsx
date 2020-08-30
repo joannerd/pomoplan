@@ -32,7 +32,7 @@ const TimerBar = (): React.ReactElement => {
       (type === SESSION) ? setSessionInput(input) : setBreakInput(input);
       validateLength(type, input);
     } else {
-      setNewInputError(type);
+      setNewInputError();
     }
   };
 

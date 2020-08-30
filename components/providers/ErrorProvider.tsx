@@ -20,8 +20,8 @@ const ErrorProvider = ({ children }: IProviderProps): React.ReactElement => {
     setErrors((errors) => ({ ...errors, ...newError }));
   };
 
-  const setNewInputError = (type: ErrorType): void => {
-    const newError = inputError(type);
+  const setNewInputError = (): void => {
+    const newError = inputError();
     setErrors((errors) => ({ ...errors, ...newError }));
   };
 

@@ -23,7 +23,7 @@ export interface IErrorContextValue {
     minOrMax: string,
     length: number
   ) => void;
-  setNewInputError: (type: ErrorType) => void;
+  setNewInputError: () => void;
   clearError: (id: number) => void;
   clearErrors: () => void;
 };
