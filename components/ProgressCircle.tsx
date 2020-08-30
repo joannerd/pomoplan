@@ -1,13 +1,17 @@
 import { useEffect, useState } from 'react';
-import { useTimer } from '../lib/context';
+import { useTimer } from '../context/TimerContext';
 
-const ProgressCircle = () => {
+const ProgressCircle = (): React.ReactElement => {
   const { breakTimer, sessionTimer } = useTimer();
-  const [strokeDashoffset, setStrokeDashoffset] = useState(100);
+  const [strokeDashoffset, setStrokeDashoffset] = useState<number>(100);
 
   useEffect(() => {
-    const maxSeconds = breakTimer.isActive ? breakTimer.length * 60 : sessionTimer.length * 60;
-    const seconds = breakTimer.isActive ? breakTimer.seconds : sessionTimer.seconds;
+    const maxSeconds: number = breakTimer.isActive
+      ? breakTimer.length * 60
+      : sessionTimer.length * 60;
+    const seconds: number = breakTimer.isActive
+      ? breakTimer.seconds
+      : sessionTimer.seconds;
     let svgValue = ((seconds * 100) / maxSeconds) * 3.14;
     if (svgValue === NaN) svgValue = 0;
     setStrokeDashoffset(svgValue);

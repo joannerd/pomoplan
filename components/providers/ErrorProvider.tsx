@@ -1,19 +1,21 @@
 import { useState, useMemo } from 'react';
-import { ErrorContext, ErrorContextValueType } from '../../lib/context';
-import { types, lengthError, inputError, Error, ErrorType } from '../../lib/errors';
+import {
+  ErrorContext,
+  IErrorContextValue,
+  IErrors,
+  ErrorType,
+} from '../../context/ErrorContext';
+import { lengthError, inputError } from '../../lib/errors';
+import { IProviderProps } from './types';
 
-type ErrorProviderProps = {
-  children: React.ReactNode;
-};
+const ErrorProvider = ({ children }: IProviderProps): React.ReactElement => {
+  const [errors, setErrors] = useState<IErrors>({});
 
-type Errors = {
-  [id: number]: Error;
-};
-
-const ErrorProvider = ({ children }: ErrorProviderProps): React.ReactElement => {
-  const [errors, setErrors] = useState<Errors>({});
-
-  const setNewLengthError = (type: ErrorType, minOrMax: string, length: number): void => {
+  const setNewLengthError = (
+    type: ErrorType,
+    minOrMax: string,
+    length: number,
+  ): void => {
     const newError = lengthError(type, minOrMax, length);
     setErrors((errors) => ({ ...errors, ...newError }));
   };
@@ -31,14 +33,16 @@ const ErrorProvider = ({ children }: ErrorProviderProps): React.ReactElement => 
     setErrors(updatedErrors);
   };
 
-  const errorContextValue: ErrorContextValueType = useMemo(() => ({
-    errors,
-    types: ErrorType,
-    setNewLengthError,
-    setNewInputError,
-    clearErrors,
-    clearError,
-  }), [errors]);
+  const errorContextValue = useMemo<IErrorContextValue>(
+    () => ({
+      errors,
+      setNewLengthError,
+      setNewInputError,
+      clearErrors,
+      clearError,
+    }),
+    [errors]
+  );
 
   return (
     <ErrorContext.Provider value={errorContextValue}>

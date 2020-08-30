@@ -1,11 +1,19 @@
 import { useEffect, useState } from 'react';
 import { formatTime } from '../lib/util';
-import { booper } from '../lib/sound';
+import { INotes, booper } from '../lib/sound';
 
-const ProgressCircleButton = ({ seconds, notes }) => {
-  const [isBeeping, setIsBeeping] = useState(false);
+interface IProgressCircleButtonProps {
+  seconds: number;
+  notes: INotes;
+};
 
-  const handleStopSoundClick = () => {
+const ProgressCircleButton = ({
+  seconds,
+  notes,
+}: IProgressCircleButtonProps): React.ReactElement => {
+  const [isBeeping, setIsBeeping] = useState<boolean>(false);
+
+  const handleStopSoundClick = (): void => {
     booper.stopSound();
     setIsBeeping(false);
   };
@@ -14,7 +22,7 @@ const ProgressCircleButton = ({ seconds, notes }) => {
     if (seconds === 0) {
       booper.createSound(notes);
       setIsBeeping(true);
-    };
+    }
   }, [seconds]);
 
   const stopSoundButton = <button onClick={handleStopSoundClick}>Stop</button>;
@@ -24,6 +32,6 @@ const ProgressCircleButton = ({ seconds, notes }) => {
       {isBeeping ? stopSoundButton : formatTime(seconds)}
     </span>
   );
-}
+};
 
 export default ProgressCircleButton;

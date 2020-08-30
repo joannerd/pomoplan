@@ -1,11 +1,11 @@
 import { useEffect } from 'react';
-import { useError } from '../lib/context';
+import { useError } from '../context/ErrorContext';
 
-const ValidationErrors = () => {
+const ValidationErrors = (): React.ReactElement => {
   const { errors, clearErrors, clearError } = useError();
 
   useEffect(() => {
-    if (errors.length) clearErrors();
+    if (Object.keys(errors).length) clearErrors();
   }, []);
 
   return (
