@@ -35,5 +35,5 @@ the length of your fourth break (15-30 minutes).
   ```
 3. Run the application in development mode.
   ```sh
-  $ yarn run dev
+  $ npm run dev
   ```
