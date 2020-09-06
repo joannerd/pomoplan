@@ -1,7 +1,7 @@
 import React, { useRef, useState, FormEvent } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
-import { ITask, useTask, TaskProperty } from '../context/TaskContext';
-import { TASK, Checkbox } from '../lib/util';
+import { ITask, useTask, TaskProperty } from '../../context/TaskContext';
+import { TASK, Checkbox } from '../../lib/util';
 
 interface ITaskProps {
   index: number;

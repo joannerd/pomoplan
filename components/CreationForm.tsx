@@ -1,9 +1,12 @@
 import React, { useState, FormEvent } from 'react';
-import { useTask } from '../context/TaskContext';
 
-const TaskForm = (): React.ReactElement => {
+interface ICreationFormProps {
+  createItem: (input: string) => void;
+  placeholderText: string;
+};
+
+const CreationForm = ({ createItem, placeholderText }: ICreationFormProps): React.ReactElement => {
   const [description, setDescription] = useState<string>('');
-  const { createTask } = useTask();
 
   const handleInputChange = (e: React.ChangeEvent<{ value: unknown }>): void => {
     setDescription(e.target.value as string);
@@ -11,7 +14,7 @@ const TaskForm = (): React.ReactElement => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    createTask(description);
+    createItem(description);
     setDescription('');
   };
 
@@ -23,7 +26,7 @@ const TaskForm = (): React.ReactElement => {
     >
       <input
         type="text"
-        placeholder="Add a task"
+        placeholder={placeholderText}
         value={description}
         onChange={handleInputChange}
         required
@@ -32,4 +35,4 @@ const TaskForm = (): React.ReactElement => {
   );
 };
 
-export default TaskForm;
+export default CreationForm;

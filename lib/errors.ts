@@ -8,7 +8,7 @@ export const types = {
 };
 
 export const lengthError = (type: ErrorType, minOrMax: string, length: number): IError => {
-  const id: number = new Date().getTime();
+  const id: number = Date.now();
   return {
     id,
     message: `${minOrMax} ${type} length is ${length} minutes.`,
@@ -16,7 +16,7 @@ export const lengthError = (type: ErrorType, minOrMax: string, length: number): 
 };
 
 export const inputError = (): IError => {
-  const id = new Date().getTime();
+  const id = Date.now();
   return {
     id,
     message: 'Input must be a 2-digit number.',

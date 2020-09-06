@@ -22,11 +22,9 @@ export enum TaskProperty {
 export type TaskValue = boolean | string;
 
 export interface ITaskContextValue {
-  tasks: {
-    [id: number]: ITask;
-  };
+  tasks: ITasks;
   createTask: (description: string) => void;
-  updateTask: (id: number, key: TaskProperty, value: boolean | string) => void;
+  updateTask: (id: number, key: TaskProperty, value: TaskValue) => void;
   deleteTask: (id: number) => void;
 };
 

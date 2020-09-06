@@ -9,21 +9,19 @@ import {
 } from '../../context/TaskContext';
 import { TASKS } from '../../lib/util';
 import { IProviderProps } from './types';
+import { getLocalStorage, setLocalStorage } from '../../lib/storage';
 
 const TaskProvider = ({ children }: IProviderProps): React.ReactElement => {
   const [tasks, setTasks] = useState<ITasks>({});
   const numTasks: number = Object.keys(tasks).length;
 
   useEffect(() => {
-    const localStorageTasks = localStorage.getItem(TASKS);
-    if (localStorageTasks) {
-      const storedTasks: ITasks = JSON.parse(localStorageTasks);
-      setTasks(storedTasks);
-    }
+    const { localStorageTasks } = getLocalStorage();
+    setTasks(localStorageTasks);
   }, []);
 
   const createTask = (description: string): void => {
-    const id: number = new Date().getTime();
+    const id: number = Date.now();
     const updatedTasks = { ...tasks };
     updatedTasks[id] = {
       id,
@@ -53,8 +51,7 @@ const TaskProvider = ({ children }: IProviderProps): React.ReactElement => {
   };
 
   const updateStoredTasks = (updatedTasks: ITasks): void => {
-    const jsonTasks: string = JSON.stringify(updatedTasks);
-    localStorage.setItem(TASKS, jsonTasks);
+    setLocalStorage(TASKS, updatedTasks);
     setTasks(updatedTasks);
   };
 
