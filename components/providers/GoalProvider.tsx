@@ -79,12 +79,16 @@ const GoalProvider = ({ children }: IProviderProps): React.ReactElement => {
     lastActiveDate: string = today,
   ): void => {
     const goalToUpdate: IGoal = goals[id];
+    const isNewGoal = goalToUpdate.lastActiveDate === '';
+    const lastActiveDateValue = new Date(goalToUpdate.lastActiveDate).valueOf();
+    const currentDateValue = new Date().valueOf();
+    
     const isConsecutive: boolean =
-      new Date(goalToUpdate.lastActiveDate).valueOf() - new Date().valueOf() <= 1;
+      isNewGoal || lastActiveDateValue - currentDateValue <= 1;
 
     const updatedGoal: IGoal = {
       ...goalToUpdate,
-      currentStreak: isConsecutive ? goalToUpdate.currentStreak + step : 0,
+      currentStreak: isConsecutive ? goalToUpdate.currentStreak + step : 1,
       overallStreak: goalToUpdate.overallStreak + step,
       lastActiveDate,
     };
