@@ -1,6 +1,7 @@
 
 export const TASK: string = 'task';
 export const TASKS: string = 'tasks';
+export const GOALS: string = 'goals';
 export const BREAK_TIMER: string = 'break-timer';
 export const SESSION_TIMER: string = 'session-timer';
 export const ACTIVE_TIMER: string = 'active-timer';
