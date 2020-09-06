@@ -5,11 +5,15 @@ import TaskList from './TaskList';
 import ProgressCircle from './ProgressCircle';
 import ProgressCircleButton from './ProgressCircleButton';
 
-const Home = (): React.ReactElement => {
+const TaskManager = (): React.ReactElement => {
   const { breakTimer, sessionTimer } = useTimer();
-  const seconds: number = breakTimer.isActive ? breakTimer.seconds : sessionTimer.seconds;
-  const notes: INotes = breakTimer.isActive ? BREAK_END_NOTES : SESSION_END_NOTES;
-  
+  const seconds: number = breakTimer.isActive
+    ? breakTimer.seconds
+    : sessionTimer.seconds;
+  const notes: INotes = breakTimer.isActive
+    ? BREAK_END_NOTES
+    : SESSION_END_NOTES;
+
   return (
     <main>
       <article className="flex-column-centered">
@@ -17,10 +21,7 @@ const Home = (): React.ReactElement => {
 
         <div className="progress-circle">
           <ProgressCircle />
-          <ProgressCircleButton
-            seconds={seconds}
-            notes={notes}
-          />
+          <ProgressCircleButton seconds={seconds} notes={notes} />
         </div>
       </article>
       <article>
@@ -32,4 +33,4 @@ const Home = (): React.ReactElement => {
   );
 };
 
-export default Home;
+export default TaskManager;

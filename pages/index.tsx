@@ -6,10 +6,10 @@ import TimerProvider from '../components/providers/TimerProvider';
 import ErrorProvider from '../components/providers/ErrorProvider';
 
 import Head from 'next/head'
-import Home from '../components/Home';
+import TaskManager from '../components/TaskManager';
 import TimerBar from '../components/TimerBar';
 
-const Root = () => (
+const Root = (): React.ReactElement => (
   <DndProvider backend={HTML5Backend}>
     <div className="flex-column-centered container">
       <Head>
@@ -29,7 +29,7 @@ const Root = () => (
           </ErrorProvider>
         </header>
         <TaskProvider>
-          <Home />
+          <TaskManager />
         </TaskProvider>
       </TimerProvider>
 
