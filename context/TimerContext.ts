@@ -13,7 +13,6 @@ export interface ITimerContextValue {
   breakTimer: ITimer;
   sessionTimer: ITimer;
   updateStoredTimers: () => void;
-  removeStoredTimers: () => void;
 };
 
 export const TimerContext = createContext<ITimerContextValue>({
@@ -34,7 +33,6 @@ export const TimerContext = createContext<ITimerContextValue>({
     setIsActive: () => {},
   },
   updateStoredTimers: () => {},
-  removeStoredTimers: () => {},
 });
 
 export const useTimer = (): ITimerContextValue => {
@@ -42,13 +40,11 @@ export const useTimer = (): ITimerContextValue => {
     breakTimer,
     sessionTimer,
     updateStoredTimers,
-    removeStoredTimers,
   } = useContext(TimerContext);
 
   return {
     breakTimer,
     sessionTimer,
     updateStoredTimers,
-    removeStoredTimers,
   };
 };
