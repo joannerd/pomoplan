@@ -9,7 +9,7 @@ interface IStopwatchProps {
   isOtherTimerActive: boolean;
   setIsOtherTimerActive: Dispatch<SetStateAction<boolean>>;
   setSessionNumber: Dispatch<SetStateAction<number>>;
-};
+}
 
 const Stopwatch = ({
   type,
@@ -21,32 +21,33 @@ const Stopwatch = ({
   const { updateStoredTimers } = useTimer();
   const { isActive, setIsActive, seconds, setSeconds, length } = stopwatchTimer;
 
-  let timer: NodeJS.Timeout | null = null;
+  let timer: NodeJS.Timeout = setInterval(() => {}, 1000);
   const toggleTimer = () => setIsActive(!isActive);
   useEffect(() => setSeconds(length * 60), [length]);
 
   useEffect(() => {
-    if (seconds === 0 && timer) {
-      clearInterval(timer);
-      toggleTimer();
-      setSeconds(length * 60);
-      setSessionNumber((sessionNumber) => sessionNumber + 1);
-    }
-
     if (isActive) {
       setIsOtherTimerActive(false);
+      clearInterval(timer);
       timer = setInterval(() => {
         setSeconds((seconds) => seconds - 1);
         updateStoredTimers();
       }, 1000);
-    } else if (timer) {
-      clearInterval(timer);
     }
 
     return () => {
       if (timer) clearInterval(timer);
+    };
+  }, [isActive]);
+
+  useEffect(() => {
+    if (seconds === 0) {
+      clearInterval(timer);
+      setIsActive(false);
+      setSeconds(length * 60);
+      setSessionNumber((sessionNumber) => sessionNumber + 1);
     }
-  }, [isActive, seconds]);
+  }, [seconds]);
 
   return (
     <>
