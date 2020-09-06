@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { formatTime } from '../lib/util';
-import { INotes, booper } from '../lib/sound';
+import { formatTime } from '../../lib/util';
+import { INotes, booper } from '../../lib/sound';
 
 interface IProgressCircleButtonProps {
   seconds: number;

@@ -11,8 +11,6 @@ import { TASKS } from '../../lib/util';
 import { IProviderProps } from './types';
 import { getLocalStorage, setLocalStorage } from '../../lib/storage';
 
-// const taskReducer = (state, action)
-
 const TaskProvider = ({ children }: IProviderProps): React.ReactElement => {
   const [tasks, setTasks] = useState<ITasks>({});
   const numTasks: number = Object.keys(tasks).length;
@@ -23,7 +21,7 @@ const TaskProvider = ({ children }: IProviderProps): React.ReactElement => {
   }, []);
 
   const createTask = (description: string): void => {
-    const id: number = new Date().getTime();
+    const id: number = Date.now();
     const updatedTasks = { ...tasks };
     updatedTasks[id] = {
       id,

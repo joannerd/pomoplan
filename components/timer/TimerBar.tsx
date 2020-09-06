@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react';
-import { useTimer } from '../context/TimerContext';
-import { useError, ErrorType } from '../context/ErrorContext';
+import { useTimer } from '../../context/TimerContext';
+import { useError, ErrorType } from '../../context/ErrorContext';
 import Stopwatch from './Stopwatch';
-import ValidationErrors from './ValidationErrors';
+import ValidationErrors from '../ValidationErrors';
+import { removeStoredTimers } from '../../lib/storage';
 
 const TimerBar = (): React.ReactElement => {
   const {
     breakTimer,
     sessionTimer,
-    removeStoredTimers,
   } = useTimer();
 
   const {

@@ -1,6 +1,6 @@
 import { useEffect, Dispatch, SetStateAction } from 'react';
-import { formatTime } from '../lib/util';
-import { useTimer, ITimer } from '../context/TimerContext';
+import { formatTime } from '../../lib/util';
+import { useTimer, ITimer } from '../../context/TimerContext';
 import StopwatchButton from './StopwatchButton';
 
 interface IStopwatchProps {

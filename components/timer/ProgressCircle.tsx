@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useTimer } from '../context/TimerContext';
+import { useTimer } from '../../context/TimerContext';
 
 const ProgressCircle = (): React.ReactElement => {
   const { breakTimer, sessionTimer } = useTimer();
