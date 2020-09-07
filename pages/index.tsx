@@ -7,7 +7,7 @@ import GoalProvider from '../components/providers/GoalProvider';
 import TimerProvider from '../components/providers/TimerProvider';
 import ErrorProvider from '../components/providers/ErrorProvider';
 
-import Head from 'next/head'
+import Head from 'next/head';
 import TaskManager from '../components/task/TaskManager';
 import GoalManager from '../components/goal/GoalManager';
 import TimerBar from '../components/timer/TimerBar';
@@ -46,6 +46,9 @@ const Root = (): React.ReactElement => {
     }
   };
 
+  const taskStyle = activeComponent === TASKS ? 'navlink active' : 'navlink';
+  const goalStyle = activeComponent === GOALS ? 'navlink active' : 'navlink';
+
   return (
     <DndProvider backend={HTML5Backend}>
       <div className="flex-column-centered container">
@@ -67,10 +70,10 @@ const Root = (): React.ReactElement => {
           </header>
           <article>
             <h1 onClick={handleClick}>
-              <span className={activeComponent === TASKS ? 'navlink active' : 'navlink'}>
+              <span className={taskStyle}>
                 {TASKS}
               </span>
-              <span className={activeComponent === GOALS ? 'navlink active' : 'navlink'}>
+              <span className={goalStyle}>
                 {GOALS}
               </span>
             </h1>
