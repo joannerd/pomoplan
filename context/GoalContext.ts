@@ -21,7 +21,7 @@ export enum GoalProperty {
   isFinished = 'isFinished',
 };
 
-export type GoalValue = boolean | string | Date;
+export type GoalValue = boolean | string;
 
 export interface IGoals {
   [id: number]: IGoal;

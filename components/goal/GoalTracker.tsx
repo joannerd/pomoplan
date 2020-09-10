@@ -45,7 +45,7 @@ const GoalTracker = () => {
           {PREVIOUS}
         </span>
       </h2>
-      {renderComponent()};
+      {renderComponent()}
     </>
   );
 }

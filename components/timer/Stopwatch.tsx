@@ -1,6 +1,6 @@
 import { useEffect, Dispatch, SetStateAction } from 'react';
 import { formatTime } from '../../lib/util';
-import { useTimer, ITimer } from '../../context/TimerContext';
+import { ITimer } from '../../context/TimerContext';
 import StopwatchButton from './StopwatchButton';
 
 interface IStopwatchProps {
@@ -18,7 +18,6 @@ const Stopwatch = ({
   setSessionNumber,
   isOtherTimerActive,
 }: IStopwatchProps): React.ReactElement => {
-  const { updateStoredTimers } = useTimer();
   const { isActive, setIsActive, seconds, setSeconds, length } = stopwatchTimer;
 
   let timer: NodeJS.Timeout = setInterval(() => {}, 1000);
@@ -31,7 +30,6 @@ const Stopwatch = ({
       clearInterval(timer);
       timer = setInterval(() => {
         setSeconds((seconds) => seconds - 1);
-        updateStoredTimers();
       }, 1000);
     }
 
