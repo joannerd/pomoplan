@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useMemo, useReducer } from 'react';
 import {
   IGoal,
   IGoals,
@@ -7,34 +7,96 @@ import {
   GoalProperty,
   GoalValue,
 } from '../../context/GoalContext';
-import { IProviderProps } from './types';
+import { IProviderProps, GoalActionType, IGoalAction } from './types';
 import { getLocalStorage, setLocalStorage } from '../../lib/storage';
 import { GOALS } from '../../lib/util';
 
+const goalReducer = (goals: IGoals, action: IGoalAction): IGoals => {
+  switch (action.type) {
+    case GoalActionType.CREATE_GOAL: {
+      const { id, startDate, description } = action;
+      return {
+        ...goals,
+        [id]: {
+          id,
+          startDate,
+          description,
+          endDate: '',
+          isFinished: false,
+          lastActiveDate: '',
+          currentStreak: 0,
+          overallStreak: 0,
+        }
+      };
+    }
+    case GoalActionType.UPDATE_GOAL: {
+      const { id, key, value } = action;
+      return {
+        ...goals,
+        [id]: {
+          ...goals[id],
+          [key]: value,
+        },
+      };
+    }
+    case GoalActionType.DELETE_GOAL: {
+      const goalsWithDeletion = { ...goals };
+      delete goalsWithDeletion[action.id];
+      return goalsWithDeletion;
+    }
+    case GoalActionType.FINISH_GOAL: {
+      const { id, lastActiveDate, endDate } = action;
+      return {
+        ...goals,
+        [id]: {
+          ...goals[id],
+          isFinished: true,
+          lastActiveDate,
+          endDate,
+        },
+      };
+    }
+    case GoalActionType.UPDATE_STREAK: {
+      const { id, step, lastActiveDate } = action;
+      const goalToUpdate: IGoal = goals[id];
+      const isNewGoal = goalToUpdate.lastActiveDate === '';
+      const lastActiveDateValue = new Date(goalToUpdate.lastActiveDate).valueOf();
+      const currentDateValue = new Date().valueOf();
+      const isConsecutive: boolean =
+        isNewGoal || lastActiveDateValue - currentDateValue <= 1;
+
+      return {
+        ...goals,
+        [id]: {
+          ...goalToUpdate,
+          currentStreak: isConsecutive ? goalToUpdate.currentStreak + step : 1,
+          overallStreak: goalToUpdate.overallStreak + step,
+          lastActiveDate,
+        },
+      };
+    }
+    default:
+      return goals;
+  }
+};
+
 const GoalProvider = ({ children }: IProviderProps): React.ReactElement => {
-  const [goals, setGoals] = useState<IGoals>({});
+  const { localStorageGoals } = getLocalStorage();
+  const [goals, dispatch] = useReducer(goalReducer, localStorageGoals);
   const today: string = new Date().toDateString();
 
   useEffect(() => {
-    const { localStorageGoals } = getLocalStorage();
-    setGoals(localStorageGoals);
-  }, []);
+    setLocalStorage(GOALS, goals);
+  }, [goals]);
 
   const createGoal = (description: string): void => {
     const id: number = Date.now();
-    const updatedGoals = { ...goals };
-    updatedGoals[id] = {
+    dispatch({
+      type: GoalActionType.CREATE_GOAL,
       id,
-      description,
-      isFinished: false,
       startDate: today,
-      endDate: '',
-      lastActiveDate: '',
-      currentStreak: 0,
-      overallStreak: 0,
-    };
-
-    updateStoredGoals(updatedGoals);
+      description,
+    });
   };
 
   const updateGoal = (
@@ -42,63 +104,49 @@ const GoalProvider = ({ children }: IProviderProps): React.ReactElement => {
     key: GoalProperty,
     value: GoalValue,
   ): void => {
-    const goalToUpdate: IGoal = { ...goals[id], [key]: value };
-    const updatedGoals: IGoals = { ...goals, [id]: goalToUpdate };
-    updateStoredGoals(updatedGoals);
+    dispatch({
+      type: GoalActionType.UPDATE_GOAL,
+      id,
+      key,
+      value,
+    });
   };
 
   const deleteGoal = (id: number): void => {
-    const goalsWithDeletion = { ...goals };
-    delete goalsWithDeletion[id];
-    updateStoredGoals(goalsWithDeletion);
+    dispatch({
+      type: GoalActionType.DELETE_GOAL,
+      id,
+    });
   };
 
   const finishGoal = (id: number): void => {
-    const goalToUpdate: IGoal = goals[id];
-    const updatedGoal: IGoal = {
-      ...goalToUpdate,
-      isFinished: true,
+    dispatch({
+      type: GoalActionType.FINISH_GOAL,
+      id,
       lastActiveDate: today,
       endDate: today,
-    };
-    const updatedGoals: IGoals = { ...goals, [id]: updatedGoal };
-    updateStoredGoals(updatedGoals);
+    });
   };
 
   const incrementStreak = (id: number): void => {
-    updateStreak(id, 1);
+    dispatch({
+      type: GoalActionType.UPDATE_STREAK,
+      id,
+      step: 1,
+      lastActiveDate: today,
+    });
   };
 
   const decrementStreak = (id: number): void => {
-    if (goals[id].currentStreak > 0) updateStreak(id, -1, '');
-  };
-
-  const updateStreak = (
-    id: number,
-    step: number,
-    lastActiveDate: string = today,
-  ): void => {
-    const goalToUpdate: IGoal = goals[id];
-    const isNewGoal = goalToUpdate.lastActiveDate === '';
-    const lastActiveDateValue = new Date(goalToUpdate.lastActiveDate).valueOf();
-    const currentDateValue = new Date().valueOf();
-    
-    const isConsecutive: boolean =
-      isNewGoal || lastActiveDateValue - currentDateValue <= 1;
-
-    const updatedGoal: IGoal = {
-      ...goalToUpdate,
-      currentStreak: isConsecutive ? goalToUpdate.currentStreak + step : 1,
-      overallStreak: goalToUpdate.overallStreak + step,
-      lastActiveDate,
-    };
-    const updatedGoals: IGoals = { ...goals, [id]: updatedGoal };
-    updateStoredGoals(updatedGoals);
-  };
-
-  const updateStoredGoals = (updatedGoals: IGoals): void => {
-    setLocalStorage(GOALS, updatedGoals);
-    setGoals(updatedGoals);
+    const goal: IGoal = goals[id];
+    if (goal.currentStreak > 0) {
+      dispatch({
+        type: GoalActionType.UPDATE_STREAK,
+        id,
+        step: -1,
+        lastActiveDate: '',
+      });
+    }
   };
 
   const goalState = useMemo<IGoalContextValue>(

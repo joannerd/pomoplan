@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useMemo, useReducer } from 'react';
 import {
   ITask,
   ITasks,
@@ -8,30 +8,61 @@ import {
   TaskValue,
 } from '../../context/TaskContext';
 import { TASKS } from '../../lib/util';
-import { IProviderProps } from './types';
+import { IProviderProps, TaskActionType, ITaskAction } from './types';
 import { getLocalStorage, setLocalStorage } from '../../lib/storage';
 
+const taskReducer = (tasks: ITasks, action: ITaskAction): ITasks => {
+  switch (action.type) {
+    case TaskActionType.CREATE_TASK: {
+      const { id, order, description } = action;
+      return {
+        ...tasks,
+        [id]: {
+          id,
+          order,
+          description,
+          isDone: false,
+          isArchived: false,
+        },
+      };
+    }
+    case TaskActionType.UPDATE_TASK: {
+      const { id, key, value } = action;
+      return {
+        ...tasks,
+        [id]: {
+          ...tasks[id],
+          [key]: value
+        },
+      };
+    }
+    case TaskActionType.DELETE_TASK: {
+      const tasksWithDeletion = { ...tasks };
+      delete tasksWithDeletion[action.id];
+      return tasksWithDeletion;
+    }
+    default:
+      return tasks;
+  }
+};
+
 const TaskProvider = ({ children }: IProviderProps): React.ReactElement => {
-  const [tasks, setTasks] = useState<ITasks>({});
-  const numTasks: number = Object.keys(tasks).length;
+  const { localStorageTasks } = getLocalStorage();
+  const [tasks, dispatch] = useReducer(taskReducer, localStorageTasks);
 
   useEffect(() => {
-    const { localStorageTasks } = getLocalStorage();
-    setTasks(localStorageTasks);
-  }, []);
+    setLocalStorage(TASKS, tasks);
+  }, [tasks]);
 
   const createTask = (description: string): void => {
     const id: number = Date.now();
-    const updatedTasks = { ...tasks };
-    updatedTasks[id] = {
+    const numTasks: number = Object.keys(tasks).length;
+    dispatch({
+      type: TaskActionType.CREATE_TASK,
       id,
       description,
-      isDone: false,
-      isArchived: false,
       order: numTasks + 1,
-    };
-
-    updateStoredTasks(updatedTasks);
+    });
   };
 
   const updateTask = (
@@ -39,20 +70,19 @@ const TaskProvider = ({ children }: IProviderProps): React.ReactElement => {
     key: TaskProperty,
     value: TaskValue,
   ): void => {
-    const taskToUpdate: ITask = { ...tasks[id], [key]: value };
-    const updatedTasks: ITasks = { ...tasks, [id]: taskToUpdate };
-    updateStoredTasks(updatedTasks);
+    dispatch({
+      type: TaskActionType.UPDATE_TASK,
+      id,
+      key,
+      value,
+    });
   };
 
   const deleteTask = (id: number): void => {
-    const tasksWithDeletion = { ...tasks };
-    delete tasksWithDeletion[id];
-    updateStoredTasks(tasksWithDeletion);
-  };
-
-  const updateStoredTasks = (updatedTasks: ITasks): void => {
-    setLocalStorage(TASKS, updatedTasks);
-    setTasks(updatedTasks);
+    dispatch({
+      type: TaskActionType.DELETE_TASK,
+      id,
+    });
   };
 
   const taskState = useMemo<ITaskContextValue>(
