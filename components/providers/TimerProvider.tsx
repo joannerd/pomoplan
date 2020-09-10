@@ -1,8 +1,8 @@
 import { useEffect, useState, useMemo } from 'react';
 import { TimerContext, ITimerContextValue } from '../../context/TimerContext';
-import { BREAK_TIMER, SESSION_TIMER, ACTIVE_TIMER } from '../../lib/util';
+import { BREAK_TIMER } from '../../lib/util';
 import { IProviderProps } from './types';
-import { getLocalStorage, setLocalStorage } from '../../lib/storage';
+import { getLocalStorage } from '../../lib/storage';
 
 const TimerProvider = ({ children }: IProviderProps): React.ReactElement => {
   const [breakLength, setBreakLength] = useState<number>(5);
@@ -14,11 +14,6 @@ const TimerProvider = ({ children }: IProviderProps): React.ReactElement => {
   const [isSessionActive, setIsSessionActive] = useState<boolean>(false);
 
   useEffect(() => {
-    loadStoredTimers();
-    return () => updateStoredTimers();
-  }, []);
-
-  const loadStoredTimers = (): void => {
     const {
       localStorageBreakTimer,
       localStorageSessionTimer,
@@ -33,21 +28,7 @@ const TimerProvider = ({ children }: IProviderProps): React.ReactElement => {
         ? setIsBreakActive(true)
         : setIsSessionActive(true);
     }
-  };
-
-  const updateStoredTimers = (): void => {
-    let activeTimer: string = '';
-
-    if (isBreakActive) {
-      activeTimer = BREAK_TIMER;
-    } else if (isSessionActive) {
-      activeTimer = SESSION_TIMER;
-    }
-
-    setLocalStorage(BREAK_TIMER, breakSeconds);
-    setLocalStorage(SESSION_TIMER, sessionSeconds);
-    setLocalStorage(ACTIVE_TIMER, activeTimer);
-  };
+  }, []);
 
   const timerState = useMemo<ITimerContextValue>(
     () => ({
@@ -67,7 +48,6 @@ const TimerProvider = ({ children }: IProviderProps): React.ReactElement => {
         isActive: isSessionActive,
         setIsActive: setIsSessionActive,
       },
-      updateStoredTimers,
     }),
     [
       breakLength,

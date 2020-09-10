@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider } from 'react-dnd';
 
@@ -16,7 +16,12 @@ const TASKS = 'Tasks';
 const GOALS = 'Goals';
 
 const Root = (): React.ReactElement => {
-  const [activeComponent, setActiveComponent] = useState(TASKS);
+  const [isLoaded, setIsLoaded] = useState<boolean>(false);
+  const [activeComponent, setActiveComponent] = useState<string>(TASKS);
+
+  useEffect(() => {
+    setIsLoaded(true);
+  }, []);
 
   const handleClick = (e: React.MouseEvent<HTMLElement, MouseEvent>): void => {
     const clickTarget = (e.target as unknown) as HTMLElement;
@@ -48,6 +53,8 @@ const Root = (): React.ReactElement => {
 
   const taskStyle = activeComponent === TASKS ? 'navlink active' : 'navlink';
   const goalStyle = activeComponent === GOALS ? 'navlink active' : 'navlink';
+
+  if (!isLoaded) return <></>;
 
   return (
     <DndProvider backend={HTML5Backend}>

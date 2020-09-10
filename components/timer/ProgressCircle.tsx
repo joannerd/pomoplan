@@ -1,30 +1,39 @@
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
-import { useTimer } from '../../context/TimerContext';
-import { formatTime } from '../../lib/util';
+import { useTimer, ITimer } from '../../context/TimerContext';
+import { formatTime, BREAK_TIMER, SESSION_TIMER, ACTIVE_TIMER } from '../../lib/util';
+import { setLocalStorage } from '../../lib/storage';
+import ProgressCircleButton from '../timer/ProgressCircleButton';
+import { INotes, BREAK_END_NOTES, SESSION_END_NOTES } from '../../lib/sound';
 
 const ProgressCircle = (): React.ReactElement => {
   const { breakTimer, sessionTimer } = useTimer();
-  const [strokeDashoffset, setStrokeDashoffset] = useState<number>(100);
-  const [activeSeconds, setActiveSeconds] = useState<string>(formatTime(0));
+  const [strokeDashoffset, setStrokeDashoffset] = useState<number>(314);
+  const [activeSeconds, setActiveSeconds] = useState<number>(sessionTimer.seconds);
+  const [activeNotes, setActiveNotes] = useState<INotes>(SESSION_END_NOTES);
 
   useEffect(() => {
-    const maxSeconds: number = breakTimer.isActive
-      ? breakTimer.length * 60
-      : sessionTimer.length * 60;
-    const seconds: number = breakTimer.isActive
-      ? breakTimer.seconds
-      : sessionTimer.seconds;
-    let svgValue = (seconds / maxSeconds) * 314;
-    if (svgValue === NaN) svgValue = 0;
+    if (breakTimer.isActive) updateTimer(BREAK_TIMER, breakTimer);
+    if (sessionTimer.isActive) updateTimer(SESSION_TIMER, sessionTimer);
+
+    activeNotes !== BREAK_END_NOTES
+      ? setActiveNotes(BREAK_END_NOTES)
+      : setActiveNotes(SESSION_END_NOTES);
+  }, [sessionTimer.isActive, sessionTimer.seconds, breakTimer.isActive, breakTimer.seconds]);
+
+  const updateTimer = (timerName: string, timer: ITimer) => {
+    let svgValue = (timer.seconds / (timer.length * 60)) * 314;
+    if (svgValue === NaN) svgValue = 314;
+    setActiveSeconds(timer.seconds);
+    setLocalStorage(timerName, timer.seconds);
+    setLocalStorage(ACTIVE_TIMER, timerName);
     setStrokeDashoffset(svgValue);
-    setActiveSeconds(formatTime(seconds));
-  }, [breakTimer.isActive, sessionTimer.seconds, breakTimer.seconds]);
+  };
 
   return (
     <>
       <Head>
-        <title>Pomoplan - {activeSeconds}</title>
+        <title>Pomoplan - {formatTime(activeSeconds)}</title>
       </Head>
       <svg
         className="progress-circle-svg"
@@ -43,12 +52,13 @@ const ProgressCircle = (): React.ReactElement => {
           cx="50"
           cy="50"
           r="45"
-          stroke="#09c"
+          stroke="#f88b8b"
           strokeWidth="10"
           fill="none"
           style={{ strokeDasharray: 314, strokeDashoffset }}
         />
       </svg>
+      <ProgressCircleButton seconds={activeSeconds} notes={activeNotes} />
     </>
   );
 };
