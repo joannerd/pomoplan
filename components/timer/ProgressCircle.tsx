@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
-import { useTimer } from '../../context/TimerContext';
+import { useTimer, ITimer } from '../../context/TimerContext';
 import { formatTime, BREAK_TIMER, SESSION_TIMER, ACTIVE_TIMER } from '../../lib/util';
 import { setLocalStorage } from '../../lib/storage';
 import ProgressCircleButton from '../timer/ProgressCircleButton';
@@ -21,7 +21,7 @@ const ProgressCircle = (): React.ReactElement => {
       : setActiveNotes(SESSION_END_NOTES);
   }, [sessionTimer.isActive, sessionTimer.seconds, breakTimer.isActive, breakTimer.seconds]);
 
-  const updateTimer = (timerName, timer) => {
+  const updateTimer = (timerName: string, timer: ITimer) => {
     let svgValue = (timer.seconds / (timer.length * 60)) * 314;
     if (svgValue === NaN) svgValue = 314;
     setActiveSeconds(timer.seconds);

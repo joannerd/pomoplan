@@ -54,7 +54,7 @@ const Root = (): React.ReactElement => {
   const taskStyle = activeComponent === TASKS ? 'navlink active' : 'navlink';
   const goalStyle = activeComponent === GOALS ? 'navlink active' : 'navlink';
 
-  if (!isLoaded) return null;
+  if (!isLoaded) return <></>;
 
   return (
     <DndProvider backend={HTML5Backend}>
